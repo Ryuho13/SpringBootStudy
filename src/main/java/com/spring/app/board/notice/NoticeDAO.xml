@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.spring.app.board.notice.NoticeDAO">
+    
+    	<select id="detail" resultType="NoticeDTO" parameterType="NoticeDTO">
+			SELECT * FROM notice WHERE board_num=#{boardNum}    	
+    	</select>
+    	
+    	<delete id="delete" parameterType="NoticeDTO">
+    		DELETE FROM notice WHERE board_num=#{boardNum}
+    	</delete>
+    	
+    	<select id="list" resultType="NoticeDTO">
+    		SELECT * FROM notice ORDER BY board_num DESC
+    	</select>
+    	
+    	<insert id="add" parameterType="NoticeDTO">
+    		INSERT INTO notice (board_writer, board_title, board_contents, board_date, board_hit)
+    		VALUES()
+    	</insert>
+    
+    
+    </mapper>
+    
+    
