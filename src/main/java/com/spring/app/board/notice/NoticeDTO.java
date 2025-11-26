@@ -13,8 +13,8 @@ import lombok.ToString;
 public class NoticeDTO {
 	private Long boardNum;
 	private String boardTitle;
-	private String boardwWrriter;
-	private String boardContnts;
+	private String boardWriter;
+	private String boardContents;
 	private LocalDate boardDate;
 	private Long boardHit;
 	

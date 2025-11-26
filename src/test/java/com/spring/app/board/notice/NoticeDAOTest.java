@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.spring.app.util.Pager;
+
 @SpringBootTest
 class NoticeDAOTest {
 
@@ -32,10 +34,26 @@ class NoticeDAOTest {
 	}
 	//@Test
 	void testList()throws Exception{
-		List<NoticeDTO> ar = noticeDAO.list();
+		Pager pager = new Pager();
+		List<NoticeDTO> ar = noticeDAO.list(pager);
 		assertNotEquals(0, ar.size());
 	}
-	
+	@Test
+	void testAdd()throws Exception{
+		for (int i=0; i<120;i++) {
+			NoticeDTO noticeDTO = new NoticeDTO();
+			noticeDTO.setBoardTitle("title"+i);
+			noticeDTO.setBoardWriter("writer"+i);
+			noticeDTO.setBoardContents("contents"+i);
+			noticeDAO.add(noticeDTO);
+			if(i%10==0) {
+				Thread.sleep(500);
+			}
+			
+			
+		}
+		
+	}
 	
 	
 	

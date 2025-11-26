@@ -12,15 +12,19 @@
     		DELETE FROM notice WHERE board_num=#{boardNum}
     	</delete>
     	
-    	<select id="list" resultType="NoticeDTO">
+    	<select id="list" resultType="NoticeDTO" parameterType="Pager">
     		SELECT * FROM notice ORDER BY board_num DESC
+    		LIMIT ${startNum}, #{perPage}
     	</select>
     	
     	<insert id="add" parameterType="NoticeDTO">
     		INSERT INTO notice (board_writer, board_title, board_contents, board_date, board_hit)
-    		VALUES()
+    		VALUES(#{boardWriter}, #{boardTitle}, #{boardContents}, NOW(), 0)
     	</insert>
     
+    	<select id="count" resultType="Long">
+    	SELECT COUNT(board_num) FROM notice;
+    	</select>
     
     </mapper>
     
