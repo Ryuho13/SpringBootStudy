@@ -5,9 +5,10 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>공지사항 상세보기</title>
+<title>공지사항 글쓰기</title>
     <!-- Custom fonts for this template-->
 	<c:import url="/WEB-INF/views/template/head.jsp"></c:import>   
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.css" rel="stylesheet">
 </head>
 <body id="page-top">
 	<div id="wrapper">
@@ -28,52 +29,41 @@
                 <div class="container-fluid">
                 	<!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">공지사항 상세</h1>
+                        <h1 class="h3 mb-0 text-gray-800">공지사항 작성</h1>
                         <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
                                 class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
                     </div>
                     
-                    <!-- ===== 상세 내용 시작 ===== -->
+                    <!-- ===== 새롭게 추가된 글쓰기 폼 ===== -->
                     <!-- Content Row -->
                     <div class="row justify-content-center">
                     	<div class="col-lg-8">
                             <div class="card shadow mb-4">
                                 <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">${dto.boardTitle}</h6>
+                                    <h6 class="m-0 font-weight-bold text-primary">새 글 작성</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">작성자</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" readonly class="form-control-plaintext" value="${dto.boardWriter}">
+                                    <form action="./add" method="post">
+                                        <div class="form-group">
+                                            <label for="boardTitle">제목</label>
+                                            <input type="text" class="form-control" id="boardTitle" name="boardTitle" required>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">작성일</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" readonly class="form-control-plaintext" value="${dto.boardDate}">
+                                        <div class="form-group">
+                                            <label for="boardWriter">작성자</label>
+                                            <input type="text" class="form-control" id="boardWriter" name="boardWriter" required>
                                         </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">조회수</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" readonly class="form-control-plaintext" value="${dto.boardHit}">
+                                        <div class="form-group">
+                                            <label for="boardContents">내용</label>
+                                            <textarea class="form-control" id="boardContents" name="boardContents" rows="10" required></textarea>
                                         </div>
-                                    </div>
-                                    <hr>
-                                    <div class="form-group">
-                                        <p>${dto.boardContents}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <a href="<c:url value='/notice/list'/>" class="btn btn-secondary">목록으로</a>
-                                        <a href="<c:url value='/notice/update?boardNum=${dto.boardNum}'/>" class="btn btn-info">수정</a>
-                                        <a href="<c:url value='/notice/delete?boardNum=${dto.boardNum}'/>" class="btn btn-danger">삭제</a>
-                                    </div>
+                                        <button type="submit" class="btn btn-primary">작성</button>
+                                        <a href="./list" class="btn btn-secondary">목록으로</a>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- ===== 상세 내용 끝 ===== -->
+                    <!-- ===== 새롭게 추가된 글쓰기 폼 ===== -->
                 
                 </div>
                 <!-- /.container-fluid -->
@@ -94,6 +84,9 @@
 	</div>
 	
 	<c:import url="/WEB-INF/views/template/foot.jsp"></c:import>
-	
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-bs4.min.js"></script>
+    <script type="text/javascript">
+    	$("#boardContents").summernote()
+    </script>
 </body>
 </html>

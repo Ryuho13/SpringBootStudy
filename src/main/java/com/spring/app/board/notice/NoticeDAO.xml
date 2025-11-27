@@ -12,9 +12,31 @@
     		DELETE FROM notice WHERE board_num=#{boardNum}
     	</delete>
     	
+    	<sql id="search">
+    		<where>
+        		<if test="search != null and search != ''">
+            		<choose>
+           		     <when test="kind == 'boardTitle'">
+          		          board_title LIKE CONCAT('%', #{search}, '%')
+          		      </when>
+          		      <when test="kind == 'boardWriter'">
+          		          board_writer LIKE CONCAT('%', #{search}, '%')
+         		       </when>
+         		       <otherwise>
+           		         board_contents LIKE CONCAT('%', #{search}, '%')
+          		      </otherwise>
+          		  </choose>
+       			</if>
+    		</where>
+		</sql>
+
+    
     	<select id="list" resultType="NoticeDTO" parameterType="Pager">
-    		SELECT * FROM notice ORDER BY board_num DESC
-    		LIMIT ${startNum}, #{perPage}
+    		SELECT * 
+    		FROM notice
+    		<include refid="search"></include>
+    		ORDER BY board_num DESC
+    		LIMIT #{startNum}, #{perPage}
     	</select>
     	
     	<insert id="add" parameterType="NoticeDTO">
@@ -22,10 +44,12 @@
     		VALUES(#{boardWriter}, #{boardTitle}, #{boardContents}, NOW(), 0)
     	</insert>
     
-    	<select id="count" resultType="Long">
-    	SELECT COUNT(board_num) FROM notice;
+    	<select id="count" resultType="Long" parameterType="Pager">
+    		SELECT COUNT(board_num) 
+    		FROM notice
+    		<include refid="search"></include>
     	</select>
-    
+    	
     </mapper>
     
     

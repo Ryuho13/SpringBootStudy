@@ -19,7 +19,7 @@ public class NoticeService {
 	    Long totalCount = noticeDAO.count();
 
 	    // 2. 조회된 totalCount를 Pager에 전달해서 페이지 계산하기
-	    pager.doPaging(totalCount);
+	    pager.pageing(totalCount);
 
 	    // 3. 계산된 Pager 정보를 DAO로 전달해서 목록 가져오기
 	    return noticeDAO.list(pager);
@@ -28,6 +28,7 @@ public class NoticeService {
 		return noticeDAO.detail(noticeDTO);
 	}
 	public int add(NoticeDTO noticeDTO)throws Exception{
+		
 		return noticeDAO.add(noticeDTO);
 	}
 	public int delete(NoticeDTO noticeDTO)throws Exception{

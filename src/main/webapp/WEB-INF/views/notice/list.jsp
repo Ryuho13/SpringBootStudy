@@ -35,7 +35,23 @@
                     
                     <!-- Content Row -->
                     <div class="row justify-content-center">
-                    <!-- 생성한 contents 작성 -->
+                    <!-- ===== 새롭게 추가된 검색 UI 시작 ===== -->
+                    <div class="col-sm-8 mt-5">
+                    <form action="<c:url value='/notice/list'/>" method="get" class="form-inline justify-content-end">
+                        <div class="form-group mr-2">
+                            <select class="form-control" name="kind">
+                                <option value="boardTitle">제목</option>
+                                <option value="boardContents">내용</option>
+                                <option value="boardWriter">작성자</option>
+                            </select>
+                        </div>
+                        <div class="form-group mr-2">
+                            <input type="text" class="form-control" name="search" placeholder="검색어를 입력하세요">
+                        </div>
+                        <button type="submit" class="btn btn-primary">검색</button>
+                    </form>
+                    </div>
+                    <!-- ===== 새롭게 추가된 검색 UI 끝 ===== -->
 					<table class="table col-sm-8 mt-5">
   <thead>
     <tr>
@@ -61,35 +77,54 @@
 </table>
                     </div>
                 </div>
-<div class="row justify-content-center">
+<div class="row justify-content-center ">
     <nav aria-label="Page navigation">
         <ul class="pagination">
             <!-- 이전 블록 링크 -->
-            <c:if test="${pager.prev}">
+            <c:if test="${pager.begin > 1}">
                 <li class="page-item">
-                    <a class="page-link" href="./list?page=${pager.startBlock - 1}" aria-label="Previous">
+                    <a class="page-link" href="<c:url value='/notice/list'>
+                        <c:param name='page' value='${pager.begin - 1}'/>
+                        <c:if test='${pager.kind != null and pager.kind != ""}'><c:param name='kind' value='${pager.kind}'/></c:if>
+                        <c:if test='${pager.search != null and pager.search != ""}'><c:param name='search' value='${pager.search}'/></c:if>
+                    </c:url>" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
             </c:if>
 
             <!-- 페이지 번호 링크 -->
-            <c:forEach begin="${pager.startBlock}" end="${pager.endBlock}" var="i">
+            <c:forEach begin="${pager.begin}" end="${pager.end}" var="i">
                 <li class="page-item ${pager.page == i ? 'active' : ''}">
-                    <a class="page-link" href="./list?page=${i}">${i}</a>
+                    <a class="page-link" href="<c:url value='/notice/list'>
+                        <c:param name='page' value='${i}'/>
+                        <c:if test='${pager.kind != null and pager.kind != ""}'><c:param name='kind' value='${pager.kind}'/></c:if>
+                        <c:if test='${pager.search != null and pager.search != ""}'><c:param name='search' value='${pager.search}'/></c:if>
+                    </c:url>">${i}</a>
                 </li>
             </c:forEach>
 
             <!-- 다음 블록 링크 -->
-            <c:if test="${pager.next}">
+            <c:if test="${pager.end < pager.totalPage}">
                 <li class="page-item">
-                    <a class="page-link" href="./list?page=${pager.endBlock + 1}" aria-label="Next">
+                    <a class="mr-5 page-link" href="<c:url value='/notice/list'>
+                        <c:param name='page' value='${pager.end + 1}'/>
+                        <c:if test='${pager.kind != null and pager.kind != ""}'><c:param name='kind' value='${pager.kind}'/></c:if>
+                        <c:if test='${pager.search != null and pager.search != ""}'><c:param name='search' value='${pager.search}'/></c:if>
+                    </c:url>" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
             </c:if>
         </ul>
     </nav>
+    
+    <div>
+    	<a href="<c:url value='/notice/add'/>" class="btn btn-primary mx-5">글쓰기</a>
+    </div>
+    
+    
+    
 </div>
                 <!-- /.container-fluid -->
             </div> 
