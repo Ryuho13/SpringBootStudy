@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.spring.app.board.BoardDTO;
 import com.spring.app.util.Pager;
 
 @SpringBootTest
@@ -16,14 +17,15 @@ class NoticeDAOTest {
 	@Autowired
 	private NoticeDAO noticeDAO;
 	
-	//@Test
+	@Test
 	void testDetail() throws Exception {
-		NoticeDTO noticeDTO = new NoticeDTO();
-		noticeDTO.setBoardNum(1L);
-		noticeDTO=noticeDAO.detail(noticeDTO);
-		assertNotNull(noticeDTO);
+		BoardDTO boardDTO = new NoticeDTO();
+		boardDTO.setBoardNum(1L);
+		boardDTO = noticeDAO.detail(boardDTO);
+		assertNotNull(boardDTO);
 	}
-	// @Test
+	
+	@Test
 	void testDelete() throws Exception {
 	    NoticeDTO noticeDTO = new NoticeDTO();
 	    noticeDTO.setBoardNum(2L);
@@ -32,13 +34,15 @@ class NoticeDAOTest {
 
 	    assertEquals(1, result);
 	}
-	//@Test
+	
+	@Test
 	void testList()throws Exception{
 		Pager pager = new Pager();
-		List<NoticeDTO> ar = noticeDAO.list(pager);
+		List<BoardDTO> ar = noticeDAO.list(pager);
 		assertNotEquals(0, ar.size());
 	}
-	@Test
+	
+	//@Test
 	void testAdd()throws Exception{
 		for (int i=0; i<120;i++) {
 			NoticeDTO noticeDTO = new NoticeDTO();
@@ -49,12 +53,13 @@ class NoticeDAOTest {
 			if(i%10==0) {
 				Thread.sleep(500);
 			}
-			
-			
 		}
-		
 	}
 	
-	
-	
+	@Test
+	void testCount() throws Exception {
+		Pager pager = new Pager();
+		Long count = noticeDAO.count(pager);
+		assertNotEquals(0L, count);
+	}
 }

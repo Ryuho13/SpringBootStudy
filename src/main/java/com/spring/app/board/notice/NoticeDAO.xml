@@ -12,6 +12,11 @@
     		DELETE FROM notice WHERE board_num=#{boardNum}
     	</delete>
     	
+    	<update id="update" parameterType="NoticeDTO">
+    		UPDATE notice SET board_title=#{boardTitle}, board_contents=#{boardContents} 
+    		WHERE board_num=#{boardNum}
+    	</update>
+    	
     	<sql id="search">
     		<where>
         		<if test="search != null and search != ''">
