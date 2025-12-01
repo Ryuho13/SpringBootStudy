@@ -49,6 +49,11 @@
     		VALUES (#{boardTitle}, #{boardWriter}, #{boardContents}, now(), 0)
     	</insert>
     	
+    	<insert id="addFile" parameterType="BoardFileDTO" useGeneratedKeys="true" keyProperty="fileNum">
+    		INSERT INTO board_files (board_num, file_name, file_origin)
+    		VALUES (#{boardNum}, #{fileName}, #{fileOrigin})
+    	</insert>
+    	
     	<delete id="delete" parameterType="NoticeDTO">
     		DELETE FROM notice WHERE board_num=#{boardNum} 
     	</delete>

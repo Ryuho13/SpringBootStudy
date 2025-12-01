@@ -107,6 +107,10 @@
             )
     	</insert>
     	
+    	<insert id="addFile" parameterType="BoardFileDTO" useGeneratedKeys="true" keyProperty="fileNum">
+    		INSERT INTO board_files (board_num, file_name, file_origin)
+    		VALUES (#{boardNum}, #{fileName}, #{fileOrigin})
+    	</insert>
 
     
     </mapper>

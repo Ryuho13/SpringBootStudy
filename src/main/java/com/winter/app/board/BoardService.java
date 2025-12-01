@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.winter.app.board.qna.QnaDAO;
 import com.winter.app.board.notice.NoticeDAO;
 import com.winter.app.board.notice.NoticeDTO;
+import com.winter.app.board.qna.QnaDTO;
 import com.winter.app.util.Pager;
 
 public interface BoardService {
