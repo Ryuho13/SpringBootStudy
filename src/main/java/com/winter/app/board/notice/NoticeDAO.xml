@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <mapper namespace="com.winter.app.board.notice.NoticeDAO">
+    	<select id="detail" resultType="NoticeDTO" parameterType="NoticeDTO">
+    		SELECT * FROM notice 
+    		WHERE 
+    		board_num=#{boardNum}
+    	</select>
+    	
+    	<select id="count" resultType="Long" parameterType="Pager">
+			    SELECT COUNT(board_num) FROM notice
+			    <if test="kind != null and search != null">
+			    WHERE
+			        <if test="kind == 'k1'">
+			            board_title LIKE concat('%',#{search},'%')
+			        </if>
+			        <if test="kind == 'k2'">
+			            board_contents LIKE concat('%',#{search},'%')
+			        </if>
+			        <if test="kind == 'k3'">
+			            board_writer LIKE concat('%',#{search},'%')
+			        </if>
+			    </if>
+			</select>
+    	  
+       <select id="list" resultType="NoticeDTO" parameterType="Pager">
+          SELECT * FROM notice 
+          <if test="kind == 'k1'">
+          WHERE 
+             board_title LIKE concat('%',#{search},'%')
+          </if>
+          <if test="kind == 'k2'">
+          WHERE 
+             board_contents LIKE concat('%',#{search},'%')
+          </if>
+          <if test="kind == 'k3'">
+          WHERE 
+             board_writer LIKE concat('%',#{search},'%')
+          </if>
+          
+          ORDER BY board_num DESC
+          LIMIT #{startNum}, #{perPage}
+       </select>
+
+    	<insert id="add" parameterType="NoticeDTO">
+    		INSERT INTO notice (board_title, board_writer, board_contents, board_date, board_hit)
+    		VALUES (#{boardTitle}, #{boardWriter}, #{boardContents}, now(), 0)
+    	</insert>
+    	
+    	<delete id="delete" parameterType="NoticeDTO">
+    		DELETE FROM notice WHERE board_num=#{boardNum} 
+    	</delete>
+    	
+    	<update id="update" parameterType="NoticeDTO">
+    		UPDATE notice SET board_title=#{boardTitle}, board_contents=#{boardContents} 
+    		WHERE board_num=#{boardNum}
+    	</update>
+    
+    </mapper>
