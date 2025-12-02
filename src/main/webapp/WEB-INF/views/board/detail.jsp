@@ -60,8 +60,18 @@
 					                <!-- Contents -->
 					                <div class="board-contents" style="white-space: pre-line; line-height: 1.6;">
 					                    ${dto.boardContents}
+					                    
+					                    
 					                </div>
-					
+					                <!-- 파일 -->
+					                                    <div>
+					                                    	<c:forEach items="${dto.fileDTOs}" var="file">
+					                                    		<div>
+					                                    			<img alt="" src="/files/${category}/${file.fileName}">
+					                                    			<a href="/files/${category}/${file.fileName}">${file.fileOrigin}</a>
+					                                    		</div>
+					                                    	</c:forEach>
+					                                    </div>					
 					            </div>
 					
 					            <!-- Card Footer -->

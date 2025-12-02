@@ -59,7 +59,7 @@ public class NoticeController {
 	    return "redirect:./list";
 	}
 	@GetMapping("detail")
-		public ModelAndView detail(BoardDTO boardDTO) throws Exception {
+	public ModelAndView detail(BoardDTO boardDTO) throws Exception {
 			ModelAndView mv = new ModelAndView();
 			
 			boardDTO = noticeService.detail(boardDTO);

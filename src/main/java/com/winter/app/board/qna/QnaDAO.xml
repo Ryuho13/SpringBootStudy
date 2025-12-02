@@ -5,11 +5,28 @@
     
     <mapper namespace="com.winter.app.board.qna.QnaDAO"> 
     	
-    	<select id="detail" resultType="QnaDTO" parameterType="QnaDTO">
-    		SELECT * FROM qna 
-    		WHERE 
-    		board_num=#{boardNum}
+    	<select id="detail" resultMap="detailResult" parameterType="QnaDTO">
+    		SELECT * 
+    		FROM qna Q
+    			LEFT JOIN
+    			qna_files QF
+    			USING(board_num) 
+    		WHERE Q.board_num=#{boardNum}
     	</select>
+    	
+    	<resultMap type="QnaDTO" id="detailResult">
+    		<id column="board_num" property="boardNum"/>
+    		<result column="board_title" property="boardTitle"/>
+    		<result column="board_writer" property="boardWriter"/>
+    		<result column="board_contents" property="boardContents"/>
+    		<result column="board_date" property="boardDate"/>
+    		<result column="board_hit" property="boardHit"/>
+    		<collection property="fileDTOs" javaType="java.util.List" ofType="BoardFileDTO">
+    			<id column="file_num" property="fileNum"/>
+    			<result column="file_name" property="fileName"/>
+    			<result column="file_origin" property="fileOrigin"/>
+    		</collection>
+    	</resultMap>
     	
     	<select id="count" resultType="Long" parameterType="Pager">
     SELECT COUNT(board_num) FROM qna
@@ -108,7 +125,7 @@
     	</insert>
     	
     	<insert id="addFile" parameterType="BoardFileDTO" useGeneratedKeys="true" keyProperty="fileNum">
-    		INSERT INTO board_files (board_num, file_name, file_origin)
+    		INSERT INTO qna_files (board_num, file_name, file_origin)
     		VALUES (#{boardNum}, #{fileName}, #{fileOrigin})
     	</insert>
 

@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.winter.app.board.notice.NoticeDTO;
 import com.winter.app.board.qna.QnaDTO;
-import com.winter.app.files.BoardFileDTO; // BoardFileDTO 임포트
+import com.winter.app.board.BoardFileDTO; // BoardFileDTO 임포트
 import com.winter.app.util.Pager;
 
 @Mapper

@@ -3,7 +3,7 @@ package com.winter.app.board;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.winter.app.files.BoardFileDTO;
+import com.winter.app.board.BoardFileDTO;
 
 import lombok.Getter;
 import lombok.Setter;

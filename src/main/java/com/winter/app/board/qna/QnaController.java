@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -52,9 +53,9 @@ public class QnaController {
 		return "board/add";
 	}
 	@PostMapping("add")
-	public ModelAndView add(QnaDTO qnaDTO, RedirectAttributes redirectAttributes) throws Exception {
+	public ModelAndView add(QnaDTO qnaDTO,MultipartFile [] attach, RedirectAttributes redirectAttributes) throws Exception {
 	    ModelAndView mv = new ModelAndView();
-	    int result = qnaService.add(qnaDTO); 
+	    int result = qnaService.add(qnaDTO, attach); 
 	    
 	    if(result > 0) {
 	        redirectAttributes.addFlashAttribute("result", "질문 등록 성공"); 

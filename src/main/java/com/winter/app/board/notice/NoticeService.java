@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.winter.app.board.BoardDTO;
 import com.winter.app.board.BoardService; // 인터페이스 임포트
 import com.winter.app.board.qna.QnaDTO;
-import com.winter.app.files.BoardFileDTO;
+import com.winter.app.board.BoardFileDTO;
 import com.winter.app.files.FileManager;
 import com.winter.app.util.Pager;
 
@@ -61,8 +61,9 @@ public class NoticeService implements BoardService {
 			// 4. 정보를 DB에 저장
 			BoardFileDTO boardFileDTO = new BoardFileDTO();
 			boardFileDTO.setFileName(fileName);
-			boardFileDTO.setOriName(f.getOriginalFilename());
-			boardFileDTO.setBoardNum(boardDTO.getBoardNum());	
+			boardFileDTO.setFileOrigin(f.getOriginalFilename());
+			boardFileDTO.setBoardNum(boardDTO.getBoardNum());
+			noticeDAO.addFile(boardFileDTO);
 	
 		}
 		return result;
@@ -80,16 +81,6 @@ public class NoticeService implements BoardService {
 		return noticeDAO.delete(noticeDTO);
 	}
 
-	@Override
-	public int add(BoardDTO boardDTO) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
-	@Override
-	public int add(QnaDTO qnaDTO) throws Exception {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 	
 }

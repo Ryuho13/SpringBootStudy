@@ -18,14 +18,9 @@ public interface BoardService {
 	
 	public BoardDTO detail(BoardDTO boardDTO)throws Exception;
 	
-	public int add(BoardDTO boardDTO)throws Exception;
-	
-	
 	public int update(BoardDTO boardDTO)throws Exception;
 	
 	public int delete(BoardDTO boardDTO)throws Exception;
 
 	int add(BoardDTO boardDTO, MultipartFile[] attach) throws Exception;
-
-	int add(QnaDTO qnaDTO) throws Exception;
 }
