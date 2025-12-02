@@ -80,6 +80,10 @@
     		WHERE board_num=#{boardNum}
     	</update>
     	
+    	<delete id="fileDelete" parameterType="BoardDTO">
+    		DELETE FROM notice_files WHERE board_num= #{boardNum}
+    	</delete>
+    	
     	
     
     </mapper>

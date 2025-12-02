@@ -92,6 +92,9 @@
     	<delete id="delete" parameterType="QnaDTO">
     		DELETE FROM qna WHERE board_num=#{boardNum} 
     	</delete>
+    	<delete id="fileDelete" parameterType="BoardDTO">
+    		DELETE FROM qna_files WHERE board_num= #{boardNum}
+    	</delete>
     	
     	<!-- 수정하기 -->
     	<update id="update" parameterType="QnaDTO">

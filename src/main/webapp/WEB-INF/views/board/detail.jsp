@@ -76,7 +76,13 @@
 					
 					            <!-- Card Footer -->
 					            <div class="card-footer bg-white text-right">
-					                <a href="./reply?boardNum=${dto.boardNum}" class="btn btn-secondary btn-sm">답글</a>
+					                <c:if test="${category ne 'notice'}">
+					                    <a href="./reply?boardNum=${dto.boardNum}" class="btn btn-secondary btn-sm">답글</a>
+					                </c:if>
+                                    <form action="./delete" method="post" style="display:inline;" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+                                        <input type="hidden" name="boardNum" value="${dto.boardNum}">
+                                        <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                                    </form>
 					                <a href="./list" class="btn btn-secondary btn-sm">목록으로</a>
 					            </div>
 					
