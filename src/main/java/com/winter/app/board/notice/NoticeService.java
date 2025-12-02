@@ -13,7 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.winter.app.board.BoardDTO;
 import com.winter.app.board.BoardService; // 인터페이스 임포트
+import com.winter.app.board.qna.QnaDTO;
 import com.winter.app.files.BoardFileDTO;
+import com.winter.app.files.FileManager;
 import com.winter.app.util.Pager;
 
 @Service
@@ -21,6 +23,9 @@ public class NoticeService implements BoardService {
     
 	@Autowired
 	private NoticeDAO noticeDAO;
+	
+	@Autowired
+	private FileManager fileManager;
 	
 	@Value("${app.upload.notice}")
 	private String uploadPath;
@@ -42,41 +47,24 @@ public class NoticeService implements BoardService {
 	
 	@Override
 	public int add(BoardDTO boardDTO, MultipartFile [] attach)throws Exception{
-		
+		// 글번호가 필요
 		int result = noticeDAO.add(boardDTO);
-		
-		// 파일이 첨부되지 않았을 경우를 대비한 null 또는 빈 배열 체크
-		if (attach == null || attach.length == 0 || attach[0].isEmpty()) {
-			return result; // 파일이 없으면 여기서 메서드 종료
-		}
-
 		// 1. 파일을 HDD에 저장
+			// 1) 어디에 저장?
+			// 2) 어떤 이름으로 저장?
 		File file = new File(uploadPath);
-		if(!file.exists()) {
-			file.mkdirs();
-		}
 		
-		for (MultipartFile f : attach) {
-			if (f.isEmpty()) { // 개별 파일이 비어있는 경우 스킵
-				continue;
-			}
+		for (MultipartFile f: attach) {
+			if (f==null || f.isEmpty()) {continue;}
 			
-			String fileName = UUID.randomUUID().toString();
-			fileName = fileName+"_"+f.getOriginalFilename();
-			
-			File saveFile = new File(file, fileName);
-			// 3. 파일 저장
-			FileCopyUtils.copy(f.getBytes(), saveFile);
-			
-			// 4. 정보를 DB에 저장 
+			String fileName = fileManager.fileSave(file, f);
+			// 4. 정보를 DB에 저장
 			BoardFileDTO boardFileDTO = new BoardFileDTO();
 			boardFileDTO.setFileName(fileName);
 			boardFileDTO.setOriName(f.getOriginalFilename());
-			boardFileDTO.setBoardNum(boardDTO.getBoardNum());
-			
-			noticeDAO.addFile(boardFileDTO);
+			boardFileDTO.setBoardNum(boardDTO.getBoardNum());	
+	
 		}
-		
 		return result;
 	}
 	
@@ -92,6 +80,16 @@ public class NoticeService implements BoardService {
 		return noticeDAO.delete(noticeDTO);
 	}
 
-	
+	@Override
+	public int add(BoardDTO boardDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int add(QnaDTO qnaDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }
