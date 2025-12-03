@@ -39,8 +39,28 @@ public class UsersService {
 		return result;
 	}
 	
-	public UsersDTO mypage(String username)throws Exception{
-		return usersDAO.mypage(username);
+	public UsersDTO login(UsersDTO usersDTO) throws Exception {
+		// 1. DAO로 username으로 user 정보 조회
+		UsersDTO resultDTO = usersDAO.mypage(usersDTO);
+
+		// 2. user 정보가 없으면 null 리턴
+		if(resultDTO == null) {
+			return null;
+		}
+
+		// 3. user 정보가 있으면 password 비교
+		// 	- password가 일치하면 user 정보 리턴
+		//  - password가 불일치하면 null 리턴
+		if(usersDTO.getPassword().equals(resultDTO.getPassword())) {
+			return resultDTO;
+		} else {
+			return null;
+		}
 	}
+
+	public UsersDTO mypage(UsersDTO usersDTO)throws Exception{
+		return usersDAO.mypage(usersDTO);
+	}
+	
 	
 }

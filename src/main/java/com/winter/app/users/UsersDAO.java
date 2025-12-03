@@ -7,7 +7,7 @@ public interface UsersDAO {
 	
 	public int register(UsersDTO usersDTO)throws Exception;
 	
-	public UsersDTO mypage(String username)throws Exception;
+	public UsersDTO mypage(UsersDTO usersDTO)throws Exception;
 	
 	public int addProfile(UsersFileDTO userFileDTO)throws Exception;
 }

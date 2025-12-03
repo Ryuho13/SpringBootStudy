@@ -9,7 +9,7 @@
 		VALUES (#{username}, #{password}, #{name}, #{email}, #{phone}, #{birth})
     </insert>
     
-    <select id="mypage" resultMap="mypageResult">
+    <select id="mypage" resultMap="mypageResult" parameterType="UsersDTO">
     	SELECT * 
         FROM users U
             LEFT JOIN
