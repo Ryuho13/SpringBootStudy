@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.winter.app.board.BoardDTO;
+import com.winter.app.board.BoardFileDTO;
 import com.winter.app.board.notice.NoticeDTO;
 import com.winter.app.util.Pager;
 
@@ -134,6 +135,10 @@ public class QnaController {
 	    mv.setViewName("redirect:./list");
 	    
 	    return mv;
+	}
+	@GetMapping("fileDown")
+	public void fileDown(BoardFileDTO boardFileDTO)throws Exception{
+		boardFileDTO = qnaService.fileDetail(boardFileDTO);
 	}
 
 }

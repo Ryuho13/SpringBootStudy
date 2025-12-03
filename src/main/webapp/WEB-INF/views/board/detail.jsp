@@ -68,7 +68,8 @@
 					                                    	<c:forEach items="${dto.fileDTOs}" var="file">
 					                                    		<div>
 					                                    			<img alt="" src="/files/${category}/${file.fileName}">
-					                                    			<a href="/files/${category}/${file.fileName}">${file.fileOrigin}</a>
+					                                    			<%-- <a href="/files/${category}/${file.fileName}">${file.fileOrigin}</a> --%>
+					                                    			<a href="./fileDown?fileNum=${file.fileNum}">${file.fileOrigin}</a>
 					                                    		</div>
 					                                    	</c:forEach>
 					                                    </div>					

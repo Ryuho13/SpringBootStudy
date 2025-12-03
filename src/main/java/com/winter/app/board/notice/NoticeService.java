@@ -89,6 +89,12 @@ public class NoticeService implements BoardService {
 		int result = noticeDAO.fileDelete(boardDTO);
 		return noticeDAO.delete(boardDTO);
 	}
+	
+	@Override
+	public BoardFileDTO fileDetail(BoardFileDTO boardFileDTO) throws Exception {
+		// TODO Auto-generated method stub
+		return noticeDAO.fileDetail(boardFileDTO);
+	}
 
 
 	
