@@ -37,6 +37,42 @@
     	VALUES (#{fileName}, #{fileOrigin}, #{username})
     </insert>
     
+    <update id="update" parameterType="UsersDTO">
+        UPDATE users
+        <set>
+        	<if test="password != null and password != ''">
+        		password = #{password},
+        	</if>
+        	name=#{name},
+        	<if test="email != null">
+        		email=#{email},
+        	</if>
+        	<if test="phone != null">
+        		phone = #{phone},
+        	</if>
+        	<if test="birth != null">
+        		birth=#{birth}
+        	</if>
+        </set>
+       	WHERE username = #{username} 
+    </update>
+
+    <delete id="deleteProfile" parameterType="UsersFileDTO">
+        DELETE FROM profile
+        WHERE file_num = #{fileNum}
+    </delete>
+
+    <update id="updateProfile" parameterType="UsersFileDTO">
+        UPDATE profile
+        SET file_name = #{fileName},
+            file_origin = #{fileOrigin}
+        WHERE username = #{username}
+    </update>
     
+    <update id="updatePassword" parameterType="UsersDTO">
+        UPDATE users
+        SET password = #{password}
+        WHERE username = #{username}
+    </update>
     	
     </mapper>

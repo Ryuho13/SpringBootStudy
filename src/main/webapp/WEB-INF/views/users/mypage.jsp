@@ -30,7 +30,7 @@
                                     <c:choose>
                                         <c:when test="${not empty dto.fileDTOs}">
                                             <c:forEach items="${dto.fileDTOs}" var="file" begin="0" end="0">
-                                                <img src="/files/profile/${file.fileName}" alt="Profile Image" class="img-fluid" style="width: 200px; height: 200px; object-fit: cover; border-radius: 15px;">
+                                                <img src="/files/${file.fileName}" alt="Profile Image" class="img-fluid" style="width: 200px; height: 200px; object-fit: cover; border-radius: 15px;">
                                             </c:forEach>
                                         </c:when>
                                         <c:otherwise>
@@ -56,6 +56,12 @@
                                         <label for="birth">Birth Date:</label>
                                         <input type="date" class="form-control bg-light" id="birth" value="${dto.birth}" readonly>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12 text-right">
+                                    <a href="/users/update" class="btn btn-primary">Update Information</a>
+                                    <a href="/users/passwordChange" class="btn btn-warning">Change Password</a>
                                 </div>
                             </div>
                         </div>

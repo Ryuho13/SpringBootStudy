@@ -10,4 +10,12 @@ public interface UsersDAO {
 	public UsersDTO mypage(UsersDTO usersDTO)throws Exception;
 	
 	public int addProfile(UsersFileDTO userFileDTO)throws Exception;
+	
+	public int update(UsersDTO usersDTO) throws Exception;
+	
+	public int deleteProfile(UsersFileDTO usersFileDTO) throws Exception;
+	
+	public int updateProfile(UsersFileDTO usersFileDTO) throws Exception;
+	
+	public int updatePassword(UsersDTO usersDTO) throws Exception;
 }

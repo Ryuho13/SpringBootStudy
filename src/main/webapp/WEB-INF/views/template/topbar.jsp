@@ -87,7 +87,7 @@
                         <c:choose>
                             <c:when test="${not empty user.fileDTOs and not empty user.fileDTOs[0].fileName}">
                                 <img class="img-profile rounded-circle"
-                                    src="/file/${user.fileDTOs[0].fileName}">
+                                    src="/files/${user.fileDTOs[0].fileName}">
                             </c:when>
                             <c:otherwise>
                                 <img class="img-profile rounded-circle"
