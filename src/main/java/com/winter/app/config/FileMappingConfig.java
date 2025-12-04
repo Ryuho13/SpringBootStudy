@@ -11,8 +11,8 @@ import com.winter.app.files.FileManager;
 @Configuration
 public class FileMappingConfig implements WebMvcConfigurer{
 
-	@Value("${app.upload}")
-	private String uploadPath; // file:///upload
+	@Value("${app.upload.profile}")
+	private String uploadPath; 
 	
 	@Value("${app.upload.url}")
 	private String urlPath; // /file/**

@@ -3,31 +3,47 @@ package com.winter.app.users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j; // Import Slf4j
 
 @Controller
 @RequestMapping("/users")
+@Slf4j // Add Slf4j annotation
 public class UsersController {
 
     @Autowired
     private UsersService usersService;
 
     @GetMapping("/register")
-    public String register() {
+    public String register(Model model)throws Exception {
+        model.addAttribute("usersDTO", new UsersDTO()); // usersDTO 로 변경
         return "users/register";
     }
 
+
     @PostMapping("/register")
-    public String register(UsersDTO usersDTO, @RequestParam("profile") MultipartFile profile) throws Exception {
-        usersService.register(usersDTO, profile);
+    public String register(
+            @Valid @ModelAttribute("usersDTO") UsersDTO usersDTO,
+            BindingResult bindingResult,
+            @RequestParam("profile") MultipartFile profile) throws Exception {
+
+        if(bindingResult.hasErrors()) {
+            return "users/register";
+        }
+
         return "redirect:/";
     }
+
+    
     @GetMapping("/mypage")
     public String mypage(HttpSession session, Model model)throws Exception{
     	// 세션에서 사용자 정보 꺼내기
