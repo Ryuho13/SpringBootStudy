@@ -1,36 +1,61 @@
 package com.winter.app.product;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.winter.app.util.Pager; // Pager import 추가
+import com.winter.app.util.Pager;
 
 @Service
 public class ProductService {
 	
 	@Autowired
-	private ProductDAO productDAO; 
+	private ProductDAO productDAO;
 	
-	public List<ProductDTO> list (Pager pager)throws Exception{
-		pager.pageing(productDAO.count(pager));
-		return productDAO.list(pager);
+	// 리스트 보기
+	public List<ProductDTO> list() throws Exception {
+		return productDAO.list();
 	}
 	
-	public ProductDTO detail(ProductDTO productDTO)throws Exception{
+	// 상세 조회
+	public ProductDTO detail(ProductDTO productDTO) throws Exception {
 		return productDAO.detail(productDTO);
 	}
 	
-	public int add(ProductDTO productDTO)throws Exception{
+	// 상품 추가
+	public int add(ProductDTO productDTO) throws Exception {
 		return productDAO.add(productDTO);
 	}
 	
-	public int update(ProductDTO productDTO)throws Exception{
+	
+	// 상품 삭제
+	public int delete(ProductDTO productDTO) throws Exception {
+		return productDAO.delete(productDTO);
+	}
+	
+	// 상품 수정
+	public int update(ProductDTO productDTO) throws Exception {
+		
 		return productDAO.update(productDTO);
 	}
 	
-	public int delete(ProductDTO productDTO)throws Exception{
-		return productDAO.delete(productDTO);
+	public List<ProductCommentDTO> commentList(ProductCommentDTO productCommentDTO, Pager pager)throws Exception{
+		Map<String, Object> map = new HashMap<>();
+		map.put("product", productCommentDTO);
+		map.put("pager", pager);
+		
+		pager.pageing(20L);
+		
+		return productDAO.commentList(map);
 	}
+	
+	public int commentAdd(ProductCommentDTO productCommentDTO)throws Exception{
+		return productDAO.commentAdd(productCommentDTO);
+	}
+	
+	
+	
 }

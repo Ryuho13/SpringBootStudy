@@ -22,10 +22,7 @@
 				<div class="row justify-content-center mb-3">
 					<form class="form-inline method-get" action="./list">
 						<select name="kind" class="form-control mr-2">
-						    <option value="k1" ${param.kind eq 'k1' ?
-'selected="selected"' : ''}>제목 (productTitle)</option>
-						    <option value="k2" ${param.kind eq 'k2' ?
-'selected="selected"' : ''}>상품 이름 (productName)</option>
+						    <option value="k2" ${param.kind eq 'k2' || empty param.kind ? 'selected="selected"' : ''}>상품 이름 (productName)</option>
 						    <option value="k3" ${param.kind eq 'k3' ?
 'selected="selected"' : ''}>카테고리 (productCategory)</option>
 						</select> 
@@ -54,20 +51,20 @@
 							<thead class="thead-dark">
 								<tr>
 									<th>번호 (Num)</th>
-									<th>제목 (Title)</th>
+									<th>상품명 (Name)</th>
 									<th>상품 이름 (Name)</th>
 									<th>카테고리 (Category)</th>
-									<th>금리 (Rate)</th>
+									<th>평점 (Rate)</th>
 									<th>판매 (Sale)</th>
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach items="${list}" var="dto">
+								<c:forEach items="${dto}" var="dto">
 									<tr>
 										<td>${dto.productNum}</td>
 										<td>
 										
-											<a href="./detail?productNum=${dto.productNum}">${dto.productTitle}</a>
+											<a href="./detail?productNum=${dto.productNum}">${dto.productName}</a>
 										
 											
 										</td>

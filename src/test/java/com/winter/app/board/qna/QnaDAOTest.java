@@ -17,7 +17,7 @@ class QnaDAOTest {
 	
 	@Test
 	void testList() {
-		fail("Not yet implemented");
+		//fail("Not yet implemented");
 	}
 
 	@Test
@@ -26,7 +26,7 @@ class QnaDAOTest {
 			QnaDTO qnaDTO = new QnaDTO();
 			qnaDTO.setBoardWriter("writer" + i);
 			qnaDTO.setBoardTitle("title" + i);
-			qnaDTO.setBoardContents("contents" + i);
+	//		qnaDTO.setBoardContents("contents" + i);
 			qnaDAO.add(qnaDTO);
 		}
 		

@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class UsersDTO {
+public class UserDTO {
 
     // Define Validation Groups
     public interface RegisterGroup {}
@@ -32,6 +32,7 @@ public class UsersDTO {
     private String password;
     
     private String passwordCheck; // Password confirmation, typically handled in service/controller
+    private String oldPassword; // For password change form
     private String idCheck;       // Username availability check flag, not a direct DTO property for validation
 
     @NotBlank(message = "이름을 기입하여 주세요.",
@@ -55,5 +56,5 @@ public class UsersDTO {
           groups = {RegisterGroup.class, UpdateGroup.class}) // Validate on both
     private LocalDate birth;
 
-    private List<UsersFileDTO> fileDTOs;
+    private List<UserFileDTO> fileDTOs;
 }

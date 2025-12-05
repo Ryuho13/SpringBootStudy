@@ -1,6 +1,5 @@
 package com.winter.app.board;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import com.winter.app.board.BoardFileDTO;
@@ -15,16 +14,15 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class BoardDTO {
+public class BoardDTO extends CommentDTO{
 	
-	private Long boardNum;
 	//@Size(min = 3, max = 15)
 	@NotBlank(message = "필수 입니다.")
 	private String boardTitle;    
-	private String boardWriter;   
-	private String boardContents;  
-	private LocalDate boardDate;     
+	// private String boardWriter;   
+	// private LocalDate boardDate;     
 	private Long boardHit;
+	private String boardContents;
 	
 	private List<BoardFileDTO> fileDTOs;
 	

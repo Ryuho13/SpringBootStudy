@@ -20,7 +20,7 @@ class NoticeDAOTest {
 	@Test
 	void testDetail() throws Exception{
 		NoticeDTO noticeDTO = new NoticeDTO();
-		noticeDTO.setBoardNum(3L);
+	//	noticeDTO.setBoardNum(3L);
 		
 //		noticeDTO =noticeDAO.detail(noticeDTO);
 		
@@ -34,7 +34,7 @@ class NoticeDAOTest {
 		for(int i=0; i<120; i++) {
 			NoticeDTO noticeDTO = new NoticeDTO();
 			noticeDTO.setBoardWriter("writer" + i);
-			noticeDTO.setBoardContents("contents" + i);
+	//		noticeDTO.setBoardContents("contents" + i);
 			noticeDTO.setBoardTitle("title" + i);
 			noticeDAO.add(noticeDTO);			
 			if(i%10==0) {

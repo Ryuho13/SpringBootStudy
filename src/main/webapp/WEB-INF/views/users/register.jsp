@@ -32,7 +32,7 @@
 
                     <div class="card shadow mb-4">
                         <div class="card-body">
-                            <form:form method="post" modelAttribute="usersDTO" enctype="multipart/form-data">
+                            <form:form method="post" modelAttribute="userDTO" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="username">Username:</label>
                                     

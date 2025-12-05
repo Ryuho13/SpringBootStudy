@@ -60,8 +60,9 @@ public class NoticeService implements BoardService {
 			// 2) 어떤 이름으로 저장?
 		File file = new File(uploadPath);
 		
-		for (MultipartFile f: attach) {
-			if (f==null || f.isEmpty()) {continue;}
+		if (attach != null) { // Added null check
+			for (MultipartFile f: attach) {
+				if (f==null || f.isEmpty()) {continue;}
 			
 			String fileName = fileManager.fileSave(file, f);
 			// 4. 정보를 DB에 저장

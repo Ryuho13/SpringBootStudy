@@ -9,6 +9,6 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class UsersFileDTO extends FileDTO {
+public class UserFileDTO extends FileDTO {
     private String username;
 }

@@ -21,7 +21,7 @@
 					<div class="card shadow mb-4">
 						<div class="card-header py-3">
 							<h6 class="m-0 font-weight-bold text-primary">
-								상품 번호: ${dto.productNum} - ${dto.productTitle}</h6>
+								상품 번호: ${dto.productNum} - ${dto.productName}</h6>
 						</div>
 						<div class="card-body">
 							<p>
@@ -31,7 +31,7 @@
 								<strong>카테고리:</strong> ${dto.productCategory}
 							</p>
 							<p>
-								<strong>금리:</strong> ${dto.productRate}%
+								<strong>평점:</strong> ${dto.productRate}%
 							</p>
 							<p>
 								<strong>판매 여부:</strong> 
@@ -41,7 +41,7 @@
 								</c:choose>
 							</p>
 							<hr>
-							<p> ${dto.productTitle} 상품에 대한 정보입니다. </p>
+							<p> ${dto.productName} 상품에 대한 정보입니다. </p>
 						</div>
 					</div>
 
