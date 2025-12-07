@@ -3,13 +3,28 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
     <mapper namespace="com.winter.app.board.notice.NoticeDAO">
-    
+    	<!-- 반복되는 쿼리를 모아논것 -->
+    	<sql id="search">
+    	   	<if test="kind == 'k1'">
+    			WHERE board_title LIKE concat('%',#{search},'%')
+    		</if>
+    		
+    		<if test="kind == 'k2'">
+    			WHERE board_contents LIKE concat('%',#{search},'%')
+    		</if>
+    		
+    		<if test="kind == 'k3'">
+    			WHERE board_writer LIKE concat('%',#{search},'%')
+    		</if>
+    	</sql>
+    	
     	<select id="detail" resultMap="detailResult" parameterType="NoticeDTO">
     		SELECT *
-    		FROM notice n
-    		LEFT JOIN notice_files NF
-      		ON n.board_num = NF.board_num
-    		WHERE n.board_num = #{boardNum}
+			FROM notice N
+				 LEFT JOIN
+			     notice_files NF
+			     USING(board_num)
+			WHERE N.board_num=#{boardNum}
     	</select>
     	
     	<resultMap type="NoticeDTO" id="detailResult">
@@ -25,50 +40,27 @@
     			<result column="file_origin" property="fileOrigin"/>
     		</collection>
     	</resultMap>
+    	
     	<select id="count" resultType="Long" parameterType="Pager">
-			    SELECT COUNT(board_num) FROM notice
-			    <if test="kind != null and search != null">
-			    WHERE
-			        <if test="kind == 'k1'">
-			            board_title LIKE concat('%',#{search},'%')
-			        </if>
-			        <if test="kind == 'k2'">
-			            board_contents LIKE concat('%',#{search},'%')
-			        </if>
-			        <if test="kind == 'k3'">
-			            board_writer LIKE concat('%',#{search},'%')
-			        </if>
-			    </if>
-			</select>
-    	  
-       <select id="list" resultType="NoticeDTO" parameterType="Pager">
-          SELECT * FROM notice 
-          <if test="kind == 'k1'">
-          WHERE 
-             board_title LIKE concat('%',#{search},'%')
-          </if>
-          <if test="kind == 'k2'">
-          WHERE 
-             board_contents LIKE concat('%',#{search},'%')
-          </if>
-          <if test="kind == 'k3'">
-          WHERE 
-             board_writer LIKE concat('%',#{search},'%')
-          </if>
-          
-          ORDER BY board_num DESC
-          LIMIT #{startNum}, #{perPage}
-       </select>
+    		SELECT COUNT(board_num) FROM notice
+			<include refid="search"></include>
+    	</select>
+    	
+    	<select id="list" resultType="NoticeDTO" parameterType="Pager">
+    		SELECT * 
+    		FROM notice 
+
+    		<include refid="search"></include>
+
+    		ORDER BY board_num DESC
+    		LIMIT #{startNum}, #{perPage}
+    	</select>
+    	
+    	
 
     	<insert id="add" parameterType="NoticeDTO" useGeneratedKeys="true" keyProperty="boardNum">
-    	INSERT INTO notice (board_title, board_writer, board_contents, board_date, board_hit)
-    	VALUES (#{boardTitle}, #{boardWriter}, #{boardContents}, now(), 0)
-		</insert>
-
-    	
-    	<insert id="addFile" parameterType="BoardFileDTO">
-    		INSERT INTO notice_files (board_num, file_name, file_origin)
-    		VALUES (#{boardNum}, #{fileName}, #{fileOrigin})
+    		INSERT INTO notice (board_title, board_writer, board_contents, board_date, board_hit)
+    		VALUES (#{boardTitle}, #{boardWriter}, #{boardContents}, now(), 0)
     	</insert>
     	
     	<delete id="delete" parameterType="NoticeDTO">
@@ -80,14 +72,24 @@
     		WHERE board_num=#{boardNum}
     	</update>
     	
+    	<!-- fileAdd -->
+    	<insert id="fileAdd" parameterType="BoardFileDTO">
+    		INSERT INTO notice_files 
+    		values (null, #{fileName}, #{fileOrigin}, #{boardNum})
+    	</insert>
+    	
+    	<!-- file delete -->
     	<delete id="fileDelete" parameterType="BoardDTO">
-    		DELETE FROM notice_files WHERE board_num= #{boardNum}
+    		DELETE FROM notice_files WHERE board_num=#{boardNum}
     	</delete>
     	
     	<!-- file detail -->
     	<select id="fileDetail" parameterType="BoardFileDTO" resultType="BoardFileDTO">
     		SELECT * FROM notice_files WHERE file_num=#{fileNum}
     	</select>
-    	
-    
     </mapper>
+    
+    
+    
+    
+    

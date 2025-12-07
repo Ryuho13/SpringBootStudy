@@ -9,27 +9,32 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.winter.app.files.FileManager;
 
 @Configuration
-public class FileMappingConfig implements WebMvcConfigurer{
-
-	@Value("${app.upload.profile}")
-	private String uploadPath; 
+public class FileMappingConfig implements WebMvcConfigurer {
+	
+	@Value("${app.upload}")
+	private String uploadPath; //file:///upload/
 	
 	@Value("${app.upload.url}")
-	private String urlPath; // /file/**
+	private String urlPath; // /files/**
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry.addResourceHandler(urlPath) // urlPath로 오면
-		.addResourceLocations(uploadPath);  // uploadPath 에서 찾을 것
+		// TODO Auto-generated method stub
+		
+		registry
+		.addResourceHandler(urlPath)
+		.addResourceLocations(uploadPath);
 		
 	}
 	
 	
 	
 	
-//	@Bean
-//	FileManager getFileManager() {
+	
+//	@Bean("")
+//	FileManager getFileManger() {
 //		return new FileManager();
 //	}
 	
+
 }

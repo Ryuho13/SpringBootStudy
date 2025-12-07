@@ -2,16 +2,29 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-    
-    <mapper namespace="com.winter.app.board.qna.QnaDAO"> 
+    <mapper namespace="com.winter.app.board.qna.QnaDAO">
+    	<!-- 반복되는 쿼리를 모아논것 -->
+    	<sql id="search">
+    	   	<if test="kind == 'k1'">
+    			WHERE board_title LIKE concat('%',#{search},'%')
+    		</if>
+    		
+    		<if test="kind == 'k2'">
+    			WHERE board_contents LIKE concat('%',#{search},'%')
+    		</if>
+    		
+    		<if test="kind == 'k3'">
+    			WHERE board_writer LIKE concat('%',#{search},'%')
+    		</if>
+    	</sql>
     	
     	<select id="detail" resultMap="detailResult" parameterType="QnaDTO">
-    		SELECT * 
-    		FROM qna Q
-    			LEFT JOIN
-    			qna_files QF
-    			USING(board_num) 
-    		WHERE Q.board_num=#{boardNum}
+    		SELECT *
+			FROM qna Q
+				 LEFT JOIN
+			     qna_files QF
+			     USING(board_num)
+			WHERE Q.board_num=#{boardNum}
     	</select>
     	
     	<resultMap type="QnaDTO" id="detailResult">
@@ -29,113 +42,60 @@
     	</resultMap>
     	
     	<select id="count" resultType="Long" parameterType="Pager">
-    SELECT COUNT(board_num) FROM qna
-    <where>
-        <if test="kind != null and search != null and search != ''">
-            <if test="kind == 'k1'">
-                board_title LIKE concat('%',#{search},'%')
-            </if>
-            <if test="kind == 'k2'">
-                board_contents LIKE concat('%',#{search},'%')
-            </if>
-            <if test="kind == 'k3'">
-                board_writer LIKE concat('%',#{search},'%')
-            </if>
-        </if>
-    </where>
-</select>
-    	  
-       <select id="list" resultType="QnaDTO" parameterType="Pager">
-			    SELECT * FROM qna 
-			    <if test="kind == 'k1'">
-			    WHERE 
-			       board_title LIKE concat('%',#{search},'%')
-			    </if>
-			    <if test="kind == 'k2'">
-			    WHERE 
-			       board_contents LIKE concat('%',#{search},'%')
-			    </if>
-			    <if test="kind == 'k3'">
-			    WHERE 
-			       board_writer LIKE concat('%',#{search},'%')
-			    </if>
-			    
-			    ORDER BY board_ref DESC, board_step ASC
-			    LIMIT #{startNum}, #{perPage}
-			</select>
-    	<!-- 등록하기 -->
-    	<insert id="add" parameterType="QnaDTO" useGeneratedKeys="true" keyProperty="boardNum">
-    		INSERT INTO qna (
-                board_title, 
-                board_writer, 
-                board_contents, 
-                board_date, 
-                board_hit,
-                board_ref,      board_step,     board_depth     )
-    		VALUES (
-                #{boardTitle}, 
-                #{boardWriter}, 
-                #{boardContents}, 
-                now(), 
-                0,
-                0,
-                0,
-                0
-            )
+    		SELECT COUNT(board_num) FROM qna
+			<include refid="search"></include>
+    	</select>
+    	
+    	<select id="list" resultType="QnaDTO" parameterType="Pager">
+    		SELECT * 
+    		FROM qna 
+
+    		<include refid="search"></include>
+
+    		ORDER BY board_ref DESC, board_step asc
+    		LIMIT #{startNum}, #{perPage}
+    	</select>
+    	
+    	
+
+    	<insert id="add" parameterType="QnaDTO" useGeneratedKeys="true" keyProperty="boardNum" >
+    		INSERT INTO 
+    		qna (board_title, board_writer, board_contents, board_date, board_hit, board_ref, board_step, board_depth)
+    		VALUES (#{boardTitle}, #{boardWriter}, #{boardContents}, now(), 0, #{boardRef}, #{boardStep}, #{boardDepth})
     	</insert>
     	
-    	<update id="refUpdate" parameterType="QnaDTO" >
-    	UPDATE qna SET board_ref=#{boardNum} WHERE board_num = #{boardNum}
+    	<update id="refUpdate" parameterType="QnaDTO">
+    		UPDATE qna SET board_ref=#{boardNum} WHERE board_num=#{boardNum}
     	</update>
     	
-    	<!-- 삭제하기 -->
-    	<delete id="delete" parameterType="QnaDTO">
-    		DELETE FROM qna WHERE board_num=#{boardNum} 
-    	</delete>
-    	<delete id="fileDelete" parameterType="BoardDTO">
-    		DELETE FROM qna_files WHERE board_num= #{boardNum}
-    	</delete>
+    	<update id="stepUpdate" parameterType="QnaDTO">
+    		UPDATE qna SET board_step=board_step+1
+    		WHERE board_ref=#{boardRef} AND board_step>#{boardStep}
+    	</update>
     	
-    	<!-- 수정하기 -->
     	<update id="update" parameterType="QnaDTO">
     		UPDATE qna SET board_title=#{boardTitle}, board_contents=#{boardContents} 
     		WHERE board_num=#{boardNum}
     	</update>
     	
-    	<update id="stepUpdate" parameterType="QnaDTO">
-    		UPDATE qna SET board_step=board_step+1
-    		WHERE board_ref = #{boardRef} AND board_step > #{boardStep}
-    	</update>
+      	<delete id="delete" parameterType="QnaDTO">
+    		DELETE FROM qna WHERE board_num=#{boardNum} 
+    	</delete>  	
     	
-    	<insert id="reply" parameterType="QnaDTO">
-    		INSERT INTO qna (
-                board_title, 
-                board_writer, 
-                board_contents, 
-                board_date, 
-                board_hit,
-                board_ref, board_step, board_depth)
-    		VALUES (
-                #{boardTitle}, 
-                #{boardWriter}, 
-                #{boardContents}, 
-                now(), 
-                0,
-                #{boardRef},      
-				        #{boardStep},     
-				        #{boardDepth}
-            )
+    	
+    	   	<!-- fileAdd -->
+    	<insert id="fileAdd" parameterType="BoardFileDTO">
+    		INSERT INTO qna_files 
+    		values (null, #{fileName}, #{fileOrigin}, #{boardNum})
     	</insert>
     	
-    	<insert id="addFile" parameterType="BoardFileDTO" useGeneratedKeys="true" keyProperty="fileNum">
-    		INSERT INTO qna_files (board_num, file_name, file_origin)
-    		VALUES (#{boardNum}, #{fileName}, #{fileOrigin})
-    	</insert>
-
-		<!-- file detail -->
+    	<!-- file delete -->
+    	<delete id="fileDelete" parameterType="BoardDTO">
+    		DELETE FROM qna_files WHERE board_num=#{boardNum}
+    	</delete>    	
+    	<!-- file detail -->
     	<select id="fileDetail" parameterType="BoardFileDTO" resultType="BoardFileDTO">
     		SELECT * FROM qna_files WHERE file_num=#{fileNum}
     	</select>
-
     
     </mapper>

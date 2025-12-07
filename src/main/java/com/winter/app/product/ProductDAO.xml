@@ -7,17 +7,17 @@
     	
     	<!-- 리스트 보기 -->
     	<select id="list" parameterType="ProductDTO" resultType="ProductDTO">
-    		SELECT * FROM product
+    		SELECT * FROM products
     	</select>
     	
     	<!-- 조회 -->
     	<select id="detail" parameterType="ProductDTO" resultType="ProductDTO">
-    		SELECT * FROM product WHERE product_num=#{productNum}
+    		SELECT * FROM products WHERE product_num=#{productNum}
     	</select>
     	
     	<!-- 추가 -->
     	<insert id="add" parameterType="productDTO">
-    		INSERT INTO product 
+    		INSERT INTO products 
 			(product_name, product_contents, product_category, product_rate, product_sale)
 			VALUES
 			(#{productName} , #{productContents} , #{productCategory} , #{productRate} , #{productSale})
@@ -25,14 +25,14 @@
     	
     	<!-- 삭제 -->
     	<delete id="delete" parameterType="ProductDTO">
-    		DELETE FROM product
+    		DELETE FROM products
     		WHERE product_num = #{productNum}
     	</delete>
     	
     	
     	<!-- 수정 -->
     	<update id="update" parameterType="ProductDTO">
-    		UPDATE product SET 
+    		UPDATE products SET 
 	    		product_name = #{productName},
 	    		product_category = #{productCategory},
 	    		product_rate = #{productRate},
@@ -42,22 +42,19 @@
     		
     	</update>
     	
-    	<!-- 댓글 -->
+    	<!--  댓글  -->
     	
-    	<select id="commentList" parameterType="java.util.Map" resultType="ProductCommentDTO">
-        	SELECT * FROM comment
-            WHERE product_num=#{product.productNum}
-            ORDER BY board_num DESC
-            Limit #{pager.startNum}, #{pager.perPage}
+    	<select id="commentList" resultType="ProductCommentDTO" parameterType="java.util.Map">
+    		SELECT * FROM comment
+    		WHERE product_num=#{product.productNum}
+    		ORDER BY board_num DESC
+    		Limit #{pager.startNum}, #{pager.perPage}
     	</select>
     	
     	<insert id="commentAdd" parameterType="ProductCommentDTO">
-    		INSERT INTO comment
-    		VALUES (null, #{boardContents}, #{username}, now(), #{productNum}, #{username})
-    		
+    		INSERT INTO comment 
+    		VALUES (null, #{boardContents}, now(), #{productNum}, #{username})
     	</insert>
-    	
-    	
     	
     	
     	

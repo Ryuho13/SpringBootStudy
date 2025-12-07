@@ -18,9 +18,11 @@ public interface ProductDAO {
 	// 상품 수정
 	public int update(ProductDTO productDTO) throws Exception;
 	
-	//---------------------
-	public List<ProductCommentDTO> commentList(Map<String, Object>map)throws Exception;
+	//----------------
+	public List<ProductCommentDTO> commentList(Map<String, Object> map)throws Exception;
 	
 	public int commentAdd(ProductCommentDTO productCommentDTO)throws Exception;
+	
+	
 	
 }

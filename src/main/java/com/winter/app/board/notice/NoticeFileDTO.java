@@ -1,5 +1,7 @@
 package com.winter.app.board.notice;
 
-public class NoticeFileDTO {
+import com.winter.app.board.BoardFileDTO;
+
+public class NoticeFileDTO extends BoardFileDTO{
 
 }

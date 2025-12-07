@@ -1,8 +1,7 @@
 package com.winter.app.board;
 
+import java.time.LocalDate;
 import java.util.List;
-
-import com.winter.app.board.BoardFileDTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -11,20 +10,18 @@ import lombok.Setter;
 import lombok.ToString;
 
 //게시판관련 DTO의 부모로 사용
-@Getter
 @Setter
+@Getter
 @ToString
-public class BoardDTO extends CommentDTO{
+public class BoardDTO extends CommentDTO {
 	
-	//@Size(min = 3, max = 15)
-	@NotBlank(message = "필수 입니다.")
-	private String boardTitle;    
-	// private String boardWriter;   
-	// private LocalDate boardDate;     
+	@NotBlank(message = "필수입니다")
+	private String boardTitle;
+	private String boardWriter;
+	
+	
 	private Long boardHit;
-	private String boardContents;
 	
 	private List<BoardFileDTO> fileDTOs;
-	
-	
+
 }

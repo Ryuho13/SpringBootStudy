@@ -32,6 +32,7 @@ public class ProductController {
 	public void detail(ProductDTO productDTO , Model model) throws Exception {
 		productDTO = productService.detail(productDTO);
 		model.addAttribute("dto", productDTO);
+		
 	}
 	
 	//추가 페이지
@@ -93,10 +94,9 @@ public class ProductController {
 	}
 	
 	//-----------------------------------------------------
-	
 	@GetMapping("commentList")
 	@ResponseBody
-	public List<ProductCommentDTO> commentList(ProductCommentDTO productCommentDTO, Pager pager)throws Exception{
+	public List<ProductCommentDTO>  commentList(ProductCommentDTO productCommentDTO, Pager pager)throws Exception{
 		List<ProductCommentDTO> list = productService.commentList(productCommentDTO, pager);
 		return list;
 	}
@@ -105,17 +105,5 @@ public class ProductController {
 	public void commentAdd(ProductCommentDTO productCommentDTO)throws Exception{
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }
