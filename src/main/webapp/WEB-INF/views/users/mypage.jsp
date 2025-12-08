@@ -28,10 +28,8 @@
                             <div class="row">
                                 <div class="col-md-4 text-center d-flex flex-column justify-content-center align-items-center">
                                     <c:choose>
-                                        <c:when test="${not empty dto.fileDTOs}">
-                                            <c:forEach items="${dto.fileDTOs}" var="file" begin="0" end="0">
-                                                <img src="/files/${file.fileName}" alt="Profile Image" class="img-fluid" style="width: 200px; height: 200px; object-fit: cover; border-radius: 15px;">
-                                            </c:forEach>
+                                        <c:when test="${not empty dto.userFileDTO and not empty dto.userFileDTO.fileName}">
+                                            <img src="/files/${dto.userFileDTO.fileName}" alt="Profile Image" class="img-fluid" style="width: 200px; height: 200px; object-fit: cover; border-radius: 15px;">
                                         </c:when>
                                         <c:otherwise>
                                             <img src="/img/undraw_profile.svg" alt="Default Profile Image" class="img-fluid" style="width: 200px; height: 200px; object-fit: cover; border-radius: 5px;">

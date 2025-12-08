@@ -26,9 +26,9 @@
                     <div class="card shadow mb-4">
                         <div class="card-body">
                             <form action="./login" method="post">
-                                <c:if test="${not empty errorMessage}">
+                                <c:if test="${param.error}">
                                     <div class="alert alert-danger" role="alert">
-                                        ${errorMessage}
+                                        아이디 또는 비밀번호가 올바르지 않습니다.
                                     </div>
                                 </c:if>
                                 <div class="form-group">

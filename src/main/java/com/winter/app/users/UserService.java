@@ -4,13 +4,21 @@ import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.winter.app.files.FileManager;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
+@Slf4j
 public class UserService {
 
 	@Autowired
@@ -18,6 +26,9 @@ public class UserService {
 	
 	@Autowired
 	private FileManager fileManager;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Value("${app.upload.user}")
 	private String uploadPath;
@@ -36,7 +47,7 @@ public class UserService {
 		}
 		
 		//3. ID 중복 체크
-		if(userDTO.getUsername() != null) {
+		if(userDTO.getUsername() != null && !bindingResult.hasFieldErrors("username")) {
 			UserDTO checkDTO = userDAO.detail(userDTO);
 			if(checkDTO != null) {
 				check=true;
@@ -47,11 +58,21 @@ public class UserService {
 		return check;
 	}
 	
+	@Transactional
 	public int register(UserDTO userDTO, MultipartFile profile)throws Exception{
-		int result=0;
+		// 비밀번호 암호화
+		userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 		
-		result = userDAO.register(userDTO);
-		
+		int result = 0;
+		try {
+			result = userDAO.register(userDTO);
+			log.info("userDAO.register() result: {}", result);
+		} catch (Exception e) {
+			log.error("Error during userDAO.register()", e);
+			// re-throw or handle
+			throw e;
+		}
+		result = userDAO.roleAdd(userDTO);
 		if(profile == null || profile.isEmpty()) {
 			return result;
 		}
@@ -65,23 +86,18 @@ public class UserService {
 		userFileDTO.setFileName(fileName);
 		userFileDTO.setFileOrigin(profile.getOriginalFilename());
 		
-		userDAO.userFileAdd(userFileDTO);
-		
-		return result;
+		try {
+			int fileResult = userDAO.userFileAdd(userFileDTO);
+			log.info("userDAO.userFileAdd() result: {}", fileResult);
+			return result;
+		} catch (Exception e) {
+			log.error("Error during userDAO.userFileAdd()", e);
+			// re-throw or handle
+			throw e;
+		}
 	}
 	public UserDTO detail(UserDTO userDTO)throws Exception{
-		UserDTO loginDTO = userDAO.detail(userDTO);
-		
-		if(loginDTO != null) {
-			if(loginDTO.getPassword().equals(userDTO.getPassword())) {
-				return loginDTO;
-			}else {
-				loginDTO = null;
-			}
-		}
-		
-		
-		return loginDTO;
+		return userDAO.detail(userDTO);
 	}
 	
 	public int update(UserDTO userDTO)throws Exception{

@@ -72,55 +72,54 @@
 
                 <div class="topbar-divider d-none d-sm-block"></div>
 
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+...
                 <!-- Nav Item - User Information -->
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <c:choose>
-                            <c:when test="${not empty user}">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">${user.username}</span>
-                            </c:when>
-                            <c:otherwise>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Login</span>
-                            </c:otherwise>
-                        </c:choose>
-                        <c:choose>
-                            <c:when test="${not empty user.fileDTOs and not empty user.fileDTOs[0].fileName}">
-                                <img class="img-profile rounded-circle"
-                                    src="/files/${user.fileDTOs[0].fileName}">
-                            </c:when>
-                            <c:otherwise>
-                                <img class="img-profile rounded-circle"
-                                    src="${pageContext.request.contextPath}/img/undraw_profile.svg">
-                            </c:otherwise>
-                        </c:choose>
+                        
+                        <sec:authorize access="isAuthenticated()">
+							<span class="mr-2 d-none d-lg-inline text-gray-600 small"><sec:authentication property="principal.name"/></span>
+						</sec:authorize>
+						
+						<sec:authorize access="isAnonymous()">
+                        	<span class="mr-2 d-none d-lg-inline text-gray-600 small">Login</span>
+                        </sec:authorize>
+                        
+                        
+                        <img class="img-profile rounded-circle"
+                                    src="/img/undraw_profile.svg">
                     </a>
                     <!-- Dropdown - User Information -->
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                         aria-labelledby="userDropdown">
-                        <c:if test="${not empty user}">
-                            <a class="dropdown-item" href="/users/mypage">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                My Page
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/users/logout" data-toggle="modal" data-target="#logoutModal">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Logout
-                            </a>
-                        </c:if>
-                        <c:if test="${empty user}">
-                            <a class="dropdown-item" href="/users/login">
-                                <i class="fas fa-sign-in-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Login
-                            </a>
-                            <a class="dropdown-item" href="/users/register">
-                                <i class="fas fa-user-plus fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Register
-                            </a>
-                        </c:if>
+                        
+                        <sec:authorize access="isAuthenticated()">
+	                        <a class="dropdown-item" href="/users/mypage">
+	                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+	                            My Page
+	                        </a>
+	                        <div class="dropdown-divider"></div>
+	                        <a class="dropdown-item" href="/users/logout">
+	                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+	                            Logout
+	                        </a>
+                        </sec:authorize>
+                        
+                        <sec:authorize access="isAnonymous()">
+	                        <a class="dropdown-item" href="/users/login">
+	                            <i class="fas fa-sign-in-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+	                            Login
+	                        </a>
+	                        <a class="dropdown-item" href="/users/register">
+	                            <i class="fas fa-user-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+	                            Register
+	                        </a>
+                        </sec:authorize>
                     </div>
                 </li>
+...
 
             </ul>
 

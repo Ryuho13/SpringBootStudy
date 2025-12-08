@@ -11,7 +11,6 @@
 <style>
     .error {
         color: red;
-        font-weight: bold;
     }
 </style>
 </head>
@@ -35,55 +34,44 @@
                             <form:form method="post" modelAttribute="userDTO" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <label for="username">Username:</label>
-                                    
                                     <form:input path="username" cssClass="form-control" id="username"/>
-                                    <!-- <input type="text" class="form-control" id="username" name="username" required> -->
-                                    <form:errors path="username"></form:errors>
+                                    <form:errors path="username" cssClass="error"/>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="password">Password:</label>
-                                    <form:input path="password" cssClass="form-control" id="password"/>
-                                    <!-- <input type="password" class="form-control" id="password" name="password" required> -->
-                                    <form:errors path="password"></form:errors>
+                                    <form:input path="password" type="password" cssClass="form-control" id="password"/>
+                                    <form:errors path="password" cssClass="error"/>
                                 </div>
                                 <div class="form-group">
-                                    <label for="password">Password:</label>
-                                    <form:input path="passwordCheck" cssClass="form-control" id="passwordCheck"/>
-                                    <form:errors path="passwordCheck"></form:errors>
+                                    <label for="passwordCheck">Password Check:</label>
+                                    <form:input path="passwordCheck" type="password" cssClass="form-control" id="passwordCheck"/>
+                                    <form:errors path="passwordCheck" cssClass="error"/>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="name">Name:</label>
-                                    
                                     <form:input path="name" cssClass="form-control" id="name"/>
-                                    <!-- <input type="text" class="form-control" id="name" name="name" required> -->
-                                    <form:errors path="name"></form:errors>
+                                    <form:errors path="name" cssClass="error"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email:</label>
-                                    
                                     <form:input path="email" cssClass="form-control" id="email"/>
-                             		<!-- <input type="email" class="form-control" id="email" name="email" required> -->
-                             		<form:errors path="email"></form:errors>
+                             		<form:errors path="email" cssClass="error"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Phone:</label>
-                                    
                                     <form:input path="phone" cssClass="form-control" id="phone"/>
-                                    <!-- <input type="text" class="form-control" id="phone" name="phone" required> -->
-                                    <form:errors path="phone"></form:errors>
+                                    <form:errors path="phone" cssClass="error"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="birth">Birth Date:</label>
-                                    
                                     <form:input type="date" path="birth" cssClass="form-control" id="birth"/>
-                                    <!-- <input type="date" class="form-control" id="birth" name="birth" required> -->
-                                    <form:errors path="birth"></form:errors>
+                                    <form:errors path="birth" cssClass="error"/>
                                 </div>
                                 <div class="form-group">
                                     <label for="profile">Profile Image:</label>
-                                    <input type="file" class="form-control-file" id="profile" name="profile">
+                                    <input type="file" class="form-control-file" id="profile" name="attach">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Register</button>
                             </form:form>

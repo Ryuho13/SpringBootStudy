@@ -15,6 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+// ... other imports
+
 @Controller
 @RequestMapping("/users/**")
 public class UserController {
@@ -31,7 +35,7 @@ public class UserController {
 	}
 	
 	@GetMapping("register")
-	public void register(UserDTO userDTO)throws Exception{}	
+	public void register(@ModelAttribute("userDTO") UserDTO userDTO)throws Exception{}	
 	
 	
 	@PostMapping("register")
@@ -40,33 +44,27 @@ public class UserController {
 			return "users/register";
 		}
 		
-		//int result = userService.register(userDTO, attach);
+		int result = userService.register(userDTO, attach);
 		
 		return "redirect:/";
 	}
+	
 	@GetMapping("mypage")
-	public void detail()throws Exception{
-		
+	public String mypage(@AuthenticationPrincipal UserDTO userDTO, Model model) throws Exception {
+	    UserDTO fullUserDTO = userService.detail(userDTO);
+	    model.addAttribute("dto", fullUserDTO);
+	    return "users/mypage";
 	}
+	
 	@GetMapping("login")
 	public void login()throws Exception{}	
-	
-	@PostMapping("login")
-	public String login(UserDTO userDTO, HttpSession session)throws Exception{
-		
-		userDTO = userService.detail(userDTO);
-		
-		
-		session.setAttribute("user", userDTO);
-		
-		return "redirect:/";
-	}
 	
 	@GetMapping("update")
 	public void update(HttpSession session,Model model)throws Exception{
 		
 		model.addAttribute("userDTO", session.getAttribute("user"));
 	}
+//...
 	
 	@PostMapping("update")
 	public String update(@Validated(UpdateGroup.class) UserDTO userDTO, BindingResult bindingResult,HttpSession session)throws Exception{
@@ -100,6 +98,14 @@ public class UserController {
 		
 		return "redirect:mypage";
 	}
+	@GetMapping("/test")
+	public String test(UserDAO userDAO) throws Exception {
+	    UserDTO dto = new UserDTO();
+	    dto.setUsername("testuser");
+	    System.out.println(userDAO.detail(dto)); // null 또는 DTO출력
+	    return "index";
+	}
+
 
 	
 }
