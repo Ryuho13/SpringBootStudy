@@ -68,8 +68,8 @@
                                 <div class="form-group">
                                     <label>Current Profile Image:</label>
                                     <c:choose>
-                                        <c:when test="${not empty usersDTO.fileDTOs and not empty usersDTO.fileDTOs[0].fileName}">
-                                            <img src="/file/${usersDTO.fileDTOs[0].fileName}" alt="Profile Image" class="img-fluid mb-2" style="max-width: 150px; border-radius: 5px;">
+                                        <c:when test="${not empty usersDTO.userFileDTO and not empty usersDTO.userFileDTO.fileName}">
+                                            <img src="/files/${usersDTO.userFileDTO.fileName}" alt="Profile Image" class="img-fluid mb-2" style="max-width: 150px; border-radius: 5px;">
                                         </c:when>
                                         <c:otherwise>
                                             <img src="${pageContext.request.contextPath}/img/undraw_profile.svg" alt="Default Profile Image" class="img-fluid mb-2" style="max-width: 150px; border-radius: 5px;">

@@ -1,5 +1,6 @@
 package com.winter.app.config.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,18 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+	@Autowired
+	private LoginSuccessHandler loginSuccessHandler;
+	@Autowired
+	private LoginFailHandler loginFailHandler;
+	
+	@Autowired
+	private Logout logout;
+	
+	@Autowired
+	private LogoutSucess logoutSucess;
+	
+	
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
 		//정적 리소스들을 시큐리티에서 제외
@@ -51,14 +64,19 @@ public class SecurityConfig {
 		            // .usernameParameter("id") // 만약 파라미터 이름이 다를경우 지정 가능
 		            // .passwordParameter("pw") // pw 파라미터 이름 지정
 		            .loginProcessingUrl("/users/login")
-		            .defaultSuccessUrl("/", true)
+		            //.defaultSuccessUrl("/", true)
+		            .successHandler(loginSuccessHandler)
+		            .failureHandler(loginFailHandler)
 		            // .failureUrl() // 로그인 실패시 url 지정
 		    )
 			.logout(logout -> logout
 		            .logoutUrl("/users/logout")
-		            .logoutSuccessUrl("/")
+		            // .logoutSuccessUrl("/")
+		            .addLogoutHandler(this.logout)
+		            .logoutSuccessHandler(logoutSucess)
 		            .invalidateHttpSession(true)
 		            // .deleteCookies("JSESSIONID") ID 세션 지우기  이름은 다를수 있음 - 개발자 도구에서 확인
+		            
 		        );
 			
 			return http.build();

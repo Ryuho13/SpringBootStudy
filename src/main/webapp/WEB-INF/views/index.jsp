@@ -2,6 +2,9 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>  
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>  
+
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,14 +40,27 @@
                     <div class="row">
                     <div>
                     <spring:message code="hi"></spring:message>
-                    <spring:message code="hello" text="--키가 없을 경우 출력--  "></spring:message>
+                    <spring:message code="hello" text=""></spring:message>
                     </div>
                     <!-- 생성한 contents 작성 -->
-                    <c:if test="${not empty user}">
+                  	<sec:authorize access="isAuthenticated()">
                     	<h1>Login 성공</h1>
+                    	<sec:authentication property="principal" var="user"/>
+                    	
+                    		<h1>환영합니다!${user.name}</h1>
+                    		<h1>${user.email}</h1>
+                    		<h3>
+                    		<sec:authentication property="principal.phone"/>
+                    		</h3>
+                    		
+                    		<sec:authentication property="name"/>
+                    		
                     	<spring:message code="message.welcome" arguments="${user.username},${user.birth}" argumentSeparator="," var="m"></spring:message>
                     	<h3>${m}</h3>
-                    </c:if>
+                  	</sec:authorize>
+                    <sec:authorize access="!isAuthenticated()">
+                    	<h1>Login이 필요합니다.</h1>
+                    </sec:authorize>
                     
                     </div>
                 

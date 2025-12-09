@@ -100,9 +100,53 @@ public class UserService {
 		return userDAO.detail(userDTO);
 	}
 	
+	/*
+	//기존 코드
 	public int update(UserDTO userDTO)throws Exception{
 		return userDAO.update(userDTO);
 	}
+	*/
+	
+	// ============== 추가된 코드 ==============
+	public int update(UserDTO userDTO)throws Exception{
+		return userDAO.update(userDTO);
+	}
+	
+	@Transactional
+	public int update(UserDTO userDTO, MultipartFile profile) throws Exception {
+	    // 1. 사용자 텍스트 정보 업데이트
+	    int result = userDAO.update(userDTO);
+
+	    // 2. 새 프로필 사진이 업로드되었는지 확인
+	    if (profile != null && !profile.isEmpty()) {
+	        // 2a. 이전 파일명을 얻기 위해 현재 사용자 정보 조회
+	        UserDTO currentUser = userDAO.detail(userDTO);
+	        
+	        // 2b. 새 파일 저장
+	        String newFileName = fileManager.fileSave(new File(uploadPath), profile);
+
+	        // 2c. 새 파일 DTO 준비
+	        UserFileDTO userFileDTO = new UserFileDTO();
+	        userFileDTO.setUsername(userDTO.getUsername());
+	        userFileDTO.setFileName(newFileName);
+	        userFileDTO.setFileOrigin(profile.getOriginalFilename());
+
+	        // 2d. DB의 파일 정보 업데이트 시도, 실패 시 새로 추가
+	        int fileResult = userDAO.updateFile(userFileDTO);
+	        if (fileResult == 0) {
+	            fileResult = userDAO.userFileAdd(userFileDTO);
+	        }
+
+	        // 2e. 기존 파일이 있었고, DB 업데이트가 성공했다면 디스크에서 삭제
+	        if (fileResult > 0 && currentUser != null && currentUser.getUserFileDTO() != null && currentUser.getUserFileDTO().getFileName() != null) {
+	            // fileManager.fileDelete(new File(uploadPath), currentUser.getUserFileDTO().getFileName()); // 기존 코드
+	            File oldFile = new File(uploadPath, currentUser.getUserFileDTO().getFileName());
+	            fileManager.fileDelete(oldFile);
+	        }
+	    }
+	    return result;
+	}
+	// =======================================
 	
 	
 	

@@ -57,32 +57,53 @@ public class UserController {
 	}
 	
 	@GetMapping("login")
-	public void login()throws Exception{}	
+	public String login(HttpSession session)throws Exception{
+		Object obj = session.getAttribute("SPRING_SECURITY_CONTEXT");
+		
+		if(obj!=null) {
+			return "redirect:/";
+		}
+		return "users/login";
+	}	
 	
 	@GetMapping("update")
-	public void update(HttpSession session,Model model)throws Exception{
-		
-		model.addAttribute("userDTO", session.getAttribute("user"));
+	public void update(@AuthenticationPrincipal UserDTO userDTO, Model model)throws Exception{
+		UserDTO dto = userService.detail(userDTO);
+		model.addAttribute("usersDTO", dto);
 	}
-//...
-	
+
+	/*
+	// 기존 코드
 	@PostMapping("update")
-	public String update(@Validated(UpdateGroup.class) UserDTO userDTO, BindingResult bindingResult,HttpSession session)throws Exception{
+	public String update(@Validated(UpdateGroup.class) @ModelAttribute("usersDTO") UserDTO userDTO, BindingResult bindingResult, MultipartFile profile)throws Exception{
 		if(bindingResult.hasErrors()) {
 			return "users/update";
 		}
 		
-		UserDTO loginDTO = (UserDTO)session.getAttribute("user");
-		userDTO.setUsername(loginDTO.getUsername());
-		int result = userService.update(userDTO);
+		int result = userService.update(userDTO, profile);
 		
-		if(result>0) {
-			loginDTO=userService.detail(loginDTO);
-			session.setAttribute("user", loginDTO);
-		}
-		
-		return "redirect:/";
+		return "redirect:./mypage";
 	}
+	*/
+	
+	// ============== 수정된 코드 (2차) ==============
+	@PostMapping("update")
+	public String update(@Validated(UpdateGroup.class) UserDTO userDTO, 
+	BindingResult bindingResult, @AuthenticationPrincipal UserDTO principal, MultipartFile profile, Model model) throws Exception {
+	    if (bindingResult.hasErrors()) {
+	        // 유효성 검사 실패 시, JSP 렌더링에 필요한 DTO를 다시 조회하여 모델에 직접 추가.
+	        UserDTO freshData = userService.detail(principal);
+	        model.addAttribute("usersDTO", freshData);
+	        return "users/update";
+	    }
+
+	    // 현재 로그인된 사용자의 username을 안전하게 설정
+	    userDTO.setUsername(principal.getUsername());
+	    int result = userService.update(userDTO, profile);
+
+	    return "redirect:./mypage";
+	}
+	// =======================================
 	
 	@GetMapping("change")
 	public void change(UserDTO userDTO)throws Exception{

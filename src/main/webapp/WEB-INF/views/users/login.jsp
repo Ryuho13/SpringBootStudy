@@ -28,7 +28,7 @@
                             <form action="./login" method="post">
                                 <c:if test="${param.error}">
                                     <div class="alert alert-danger" role="alert">
-                                        아이디 또는 비밀번호가 올바르지 않습니다.
+                                        ${param.message}
                                     </div>
                                 </c:if>
                                 <div class="form-group">
@@ -39,6 +39,10 @@
                                     <label for="password">Password:</label>
                                     <input type="password" class="form-control" id="password" name="password" required>
                                 </div>
+                                 <div class="form-group form-check">
+    								<input type="checkbox" class="form-check-input" id="exampleCheck1">
+    								<label class="form-check-label" for="exampleCheck1">Remember Me</label>
+  								</div>
                                 <button type="submit" class="btn btn-primary">Login</button>
                             </form>
                         </div>

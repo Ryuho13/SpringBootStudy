@@ -41,6 +41,11 @@
     		<result column="email" property="email"/>
     		<result column="phone" property="phone"/>
     		<result column="birth" property="birth"/>
+    		<result column="account_non_expired" property="accountNonExpired" />
+    		<result column="account_non_locked" property="accountNonLocked" />
+    		<result column="credentials_nonexpired" property="credentialsNonExpired" />
+    		<result column="enabled" property="enabled" />
+    		
     		<association property="userFileDTO" javaType="UserFileDTO">
     			<id column="file_num" property="fileNum" />
     			<result column="file_name" property="fileName"/>
@@ -69,6 +74,11 @@
 			WHERE username=#{username}
 		</update>
     	
-
+		<!-- ============== 추가된 코드 ============== -->
+		<update id="updateFile" parameterType="UserFileDTO">
+			UPDATE profile SET file_name=#{fileName}, file_origin=#{fileOrigin}
+			WHERE username=#{username}
+		</update>
+		<!-- ======================================= -->
     
     </mapper>

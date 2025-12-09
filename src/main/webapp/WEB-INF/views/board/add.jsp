@@ -53,8 +53,9 @@
 									  <div class="form-group">
 									  	
 									    <label for="writer">Writer</label>
-									    <!-- 밑에꺼를 대체  -->
-									    <form:input path="boardWriter" cssClass="form-control" id="writer"  />
+									    <%-- <!-- 밑에꺼를 대체  -->
+									    <form:input path="boardWriter" cssClass="form-control" id="writer"  /> --%>
+									    <form:input path="boardWriter" cssClass="form-control" id="writer" readonly="true" />
 									    <!-- <input type="text" class="form-control" value="${dto.boardWriter}" id="writer" name="boardWriter" aria-describedby="emailHelp">  -->
 									  </div>
 									  <div class="form-group">

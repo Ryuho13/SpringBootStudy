@@ -34,6 +34,11 @@ public class UserDTO implements UserDetails {
 	
 	private String passwordCheck;
 	
+	private boolean accountNonExpired;
+	private boolean accountNonLocked;
+	private boolean credentialsNonExpired;
+	private boolean enabled;
+	
 	@NotBlank(groups = {RegisterGroup.class, UpdateGroup.class})
 	private String name;
 	@Email(groups = {RegisterGroup.class, UpdateGroup.class})
@@ -68,23 +73,5 @@ public class UserDTO implements UserDetails {
         return this.username;
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+    
 }

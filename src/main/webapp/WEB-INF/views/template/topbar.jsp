@@ -73,14 +73,14 @@
                 <div class="topbar-divider d-none d-sm-block"></div>
 
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-...
+
                 <!-- Nav Item - User Information -->
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         
                         <sec:authorize access="isAuthenticated()">
-							<span class="mr-2 d-none d-lg-inline text-gray-600 small"><sec:authentication property="principal.name"/></span>
+							<span class="mr-3 d-none d-lg-inline text-gray-600 small"><sec:authentication property="principal.name"/></span>
 						</sec:authorize>
 						
 						<sec:authorize access="isAnonymous()">
@@ -119,7 +119,7 @@
                         </sec:authorize>
                     </div>
                 </li>
-...
+
 
             </ul>
 

@@ -38,22 +38,24 @@
                                     <h5 class="mt-3 font-weight-bold text-primary">${dto.name}</h5>
                                 </div>
                                 <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label for="username">Username:</label>
-                                        <input type="text" class="form-control bg-light" id="username" value="${dto.username}" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email:</label>
-                                        <input type="email" class="form-control bg-light" id="email" value="${dto.email}" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="phone">Phone:</label>
-                                        <input type="text" class="form-control bg-light" id="phone" value="${dto.phone}" readonly>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="birth">Birth Date:</label>
-                                        <input type="date" class="form-control bg-light" id="birth" value="${dto.birth}" readonly>
-                                    </div>
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                                            <strong class="text-primary">ID</strong>
+                                            <span class="text-gray-800">${dto.username}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                                            <strong class="text-primary">Email</strong>
+                                            <span class="text-gray-800">${dto.email}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                                            <strong class="text-primary">Phone</strong>
+                                            <span class="text-gray-800">${dto.phone}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                                            <strong class="text-primary">Birth Date</strong>
+                                            <span class="text-gray-800">${dto.birth}</span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="row mt-3">
