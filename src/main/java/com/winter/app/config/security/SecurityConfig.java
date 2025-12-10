@@ -9,6 +9,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+
+import com.winter.app.users.UserDetailServiceImpl;
+import com.winter.app.users.OAuth2UserServiceImpl; // 추가된 코드
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +29,9 @@ public class SecurityConfig {
 	@Autowired
 	private LogoutSucess logoutSucess;
 	
+	@Autowired
+	private UserDetailServiceImpl detailServiceImpl;
+	
 	
 	@Bean
 	WebSecurityCustomizer webSecurityCustomizer() {
@@ -40,7 +47,7 @@ public class SecurityConfig {
 	
 	// 인증과 인가에 관한 설정
 	 @Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
+	SecurityFilterChain securityFilterChain(HttpSecurity http, OAuth2UserServiceImpl oAuth2UserServiceImpl)throws Exception{
 		http
 			.cors((cors)->{cors.disable();})
 			.csrf(csrf -> csrf.disable())
@@ -75,15 +82,48 @@ public class SecurityConfig {
 		            .addLogoutHandler(this.logout)
 		            .logoutSuccessHandler(logoutSucess)
 		            .invalidateHttpSession(true)
+		            .deleteCookies("JSESSIONID")
+		            .deleteCookies("remember-me")
 		            // .deleteCookies("JSESSIONID") ID 세션 지우기  이름은 다를수 있음 - 개발자 도구에서 확인
 		            
-		        );
-			
+		     )
+			.rememberMe(remember-> remember
+					.rememberMeParameter("rememberme")
+					.tokenValiditySeconds(432000)
+					.key("remeberkey")
+					.userDetailsService(detailServiceImpl)
+					.authenticationSuccessHandler(loginSuccessHandler)
+					.useSecureCookie(false)
+					
+			)
+			.sessionManagement(session -> session
+			        .invalidSessionUrl("/")
+			        .sessionFixation().migrateSession()  // 세션 보안 기본값
+			        .maximumSessions(1)
+			        .maxSessionsPreventsLogin(false)     // 새 로그인 차단
+			        .expiredUrl("/")
+			)
+			.oauth2Login(t -> t
+				.userInfoEndpoint(s->
+				s.userService(oAuth2UserServiceImpl) // 올바른 서비스로 교체
+				
+				)
+					
+			)
+			;
+
+
 			return http.build();
 	}
 	
+	@Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher(); // 세션 이벤트를 Spring Security에 알리는 리스너 등록
+    }
+	
 	 @Bean
-	 public PasswordEncoder passwordEncoder() {
+	 public static PasswordEncoder passwordEncoder() {
 		 return new BCryptPasswordEncoder();
 	 }
+
 }

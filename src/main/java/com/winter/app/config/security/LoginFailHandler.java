@@ -11,6 +11,7 @@ import org.springframework.security.authentication.InternalAuthenticationService
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException; // 추가된 코드
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.ServletException;
@@ -48,6 +49,10 @@ public class LoginFailHandler implements AuthenticationFailureHandler{
 		}
 		if(exception instanceof InternalAuthenticationServiceException) {
 			message = "id 틀림";
+		}
+		// 추가된 코드: 동시 로그인 시도 시 메시지 처리
+		if(exception instanceof SessionAuthenticationException) {
+			message = "이미 로그인된 사용자입니다."; 
 		}
 		message = URLEncoder.encode(message, "UTF-8");
 		response.sendRedirect("./login?error=true&message="+ message);

@@ -55,11 +55,16 @@
                     		
                     		<sec:authentication property="name"/>
                     		
-                    	<spring:message code="message.welcome" arguments="${user.username},${user.birth}" argumentSeparator="," var="m"></spring:message>
-                    	<h3>${m}</h3>
+                    	<c:set var="welcomeMsg" value="환영합니다 ${user.name} 님" />
+                    	<c:if test="${not empty user.birth}">
+                    		<spring:message code="message.welcome.birth" arguments="${user.birth}" var="birthMsg"></spring:message>
+                    		<c:set var="welcomeMsg" value="${welcomeMsg} ${birthMsg}" />
+                    	</c:if>
+                    	<h3>${welcomeMsg}</h3>
                   	</sec:authorize>
                     <sec:authorize access="!isAuthenticated()">
                     	<h1>Login이 필요합니다.</h1>
+                    	<a href="/oauth2/authorization/kakao">Kakao Login</a>
                     </sec:authorize>
                     
                     </div>

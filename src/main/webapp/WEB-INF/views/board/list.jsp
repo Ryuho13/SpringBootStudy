@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -117,9 +119,18 @@
 					            </li>
 					        </ul>
 					    </nav>
+					    <sec:authorize access="isAuthenticated()">
 					    <div>
+					    	<c:if test="${category ne 'notice'}">
 								<a href="./add"  class="btn btn-primary">글쓰기</a>
+					    	</c:if>
+					    	<c:if test="${category eq 'notice'}">
+								<sec:authorize access="hasRole('ADMIN')">
+									<a href="./add"  class="btn btn-primary">글쓰기</a>
+								</sec:authorize>
+							</c:if>
 						</div>
+					    </sec:authorize>
     		</div>
 				</div>
 				<!-- /.container-fluid -->
