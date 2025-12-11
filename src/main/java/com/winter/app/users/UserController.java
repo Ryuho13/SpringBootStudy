@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import reactor.core.publisher.Mono;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 // ... other imports
@@ -28,6 +32,9 @@ public class UserController {
 	
 	@Value("${category.user}")
 	private String category;
+	
+	@Value("${spring.security.oauth2.client.registration.kakao.client-secret}") // application.properties 파일에 kakao.admin-key=YOUR_KAKAO_ADMIN_KEY 추가 필요
+	private String adminKey;
 
 	@ModelAttribute("category")
 	private String getCategory() {
@@ -126,7 +133,44 @@ public class UserController {
 	    System.out.println(userDAO.detail(dto)); // null 또는 DTO출력
 	    return "index";
 	}
-
+	@GetMapping("delete")
+	public String deleteGet() throws Exception {
+		return "users/delete"; // 탈퇴 확인 페이지로 이동
+	}
+	
+	@PostMapping("delete")
+	public String deletePost(@AuthenticationPrincipal UserDTO userDTO, HttpSession session) throws Exception {
+		// 1. 소셜 로그인 사용자인 경우 카카오 연결 끊기 (unlink) API 호출
+		// userDTO.getAttributes()가 null이 아니면 소셜 로그인 사용자
+		if (userDTO.getAttributes() != null) {
+			WebClient webClient = WebClient.create();
+			
+			// 카카오 연결 끊기 API (v1/user/unlink)
+			try {
+				String kakaoUnlinkResponse = webClient.post()
+						 .uri("https://kapi.kakao.com/v1/user/unlink")
+						 .header("Authorization","KakaoAK " + adminKey)
+						 .header("Content-Type", "Content-Type: application/x-www-form-urlencoded;charset=utf-8")
+						 .body(BodyInserters.fromFormData("target_id_type", "user_id").with("target_id", userDTO.getUsername())) // user_id 사용
+						 .retrieve()
+						 .bodyToMono(String.class)
+						 .block(); // 동기적으로 처리
+				System.out.println("Kakao Unlink Response: " + kakaoUnlinkResponse);
+			} catch (Exception e) {
+				System.err.println("Kakao unlink API call failed: " + e.getMessage());
+				// 실패해도 로컬 DB 삭제는 진행 (카카오 연결만 끊기지 않은 것)
+			}
+		}
+		
+		// 2. DB에서 사용자 정보 삭제
+		int result = userService.deleteUser(userDTO);
+		
+		// 3. 세션 무효화
+		session.invalidate();
+		
+		// 4. 메인 페이지로 리다이렉트
+		return "redirect:/";
+	}
 
 	
 }

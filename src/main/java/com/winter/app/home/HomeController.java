@@ -25,6 +25,11 @@ public class HomeController {
 		return "index";
 	}
 	
+	@GetMapping("/logout") // /logout 요청 시 홈페이지로 리다이렉트
+	public String handleLogoutRedirect() {
+		return "redirect:/";
+	}
+	
 	public String index5(@AuthenticationPrincipal UserDTO dto)throws Exception{
 		System.out.println(dto.getUsername());
 		

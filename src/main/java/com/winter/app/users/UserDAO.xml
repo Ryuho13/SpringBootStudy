@@ -80,5 +80,11 @@
 			WHERE username=#{username}
 		</update>
 		<!-- ======================================= -->
+		
+		<delete id="deleteUser" parameterType="UserDTO">
+			DELETE FROM user_role WHERE username = #{username};
+			DELETE FROM profile WHERE username = #{username};
+			DELETE FROM users WHERE username = #{username};
+		</delete>
     
     </mapper>

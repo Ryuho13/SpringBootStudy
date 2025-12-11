@@ -61,8 +61,8 @@
                             <div class="row mt-3">
                                 <div class="col-12 text-right">
                                     <a href="/users/update" class="btn btn-primary">Update Information</a>
-                                    <a href="/users/passwordChange" class="btn btn-warning">Change Password</a>
-                                </div>
+                                                                         <a href="/users/passwordChange" class="btn btn-warning">Change Password</a>
+                                                                        <a href="/users/delete" class="btn btn-danger">회원 탈퇴</a>                                </div>
                             </div>
                         </div>
                     </div>

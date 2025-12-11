@@ -15,5 +15,6 @@ public interface UserDAO {
 	// ============== 추가된 코드 ==============
 	public int updateFile(UserFileDTO userFileDTO)throws Exception;
 	// =======================================
+	public int deleteUser(UserDTO userDTO) throws Exception;
 
 }
