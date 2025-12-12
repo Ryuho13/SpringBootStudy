@@ -2,6 +2,7 @@ package com.winter.app.home;
 
 import java.security.Principal;
 import java.util.Enumeration;
+import java.util.Random;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,7 +22,16 @@ public class HomeController {
 	// Spring boot 3.2 이상 버전 부터가능
 	
 	@GetMapping("/")
-	public String home() {
+	public String home()throws Exception{
+//		Random random = new Random();
+//		
+//		int num = random.nextInt(2);
+//		
+//		System.out.println(num);
+//		if (num%2 == 0) {
+//			throw new Exception();
+//		}
+		
 		return "index";
 	}
 	
