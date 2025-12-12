@@ -43,9 +43,9 @@ public class QnaController {
 
 		List<BoardDTO> list= qnaService.list(pager);
 	
-		if (list.size()>0) {
-			throw new NullPointerException();
-		}
+//		if (list.size()>0) {
+//			throw new NullPointerException();
+//		}
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pager", pager);
