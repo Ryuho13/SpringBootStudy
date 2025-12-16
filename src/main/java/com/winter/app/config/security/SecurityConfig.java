@@ -3,23 +3,29 @@ package com.winter.app.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.session.HttpSessionEventPublisher;
 
+import com.winter.app.config.security.jwt.JwtAuthenticationFilter;
+import com.winter.app.config.security.jwt.JwtLoginFilter;
+import com.winter.app.config.security.jwt.JwtTokenManager;
 import com.winter.app.users.UserDetailServiceImpl;
-import com.winter.app.users.OAuth2UserServiceImpl; // 추가된 코드
+
+import jakarta.websocket.Session;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+	
 	@Autowired
 	private LoginSuccessHandler loginSuccessHandler;
+	
 	@Autowired
 	private LoginFailHandler loginFailHandler;
 	
@@ -30,100 +36,104 @@ public class SecurityConfig {
 	private LogoutSucess logoutSucess;
 	
 	@Autowired
-	private UserDetailServiceImpl detailServiceImpl;
+	private UserDetailServiceImpl detailSerivceImpl;
 	
+	//----------- JWT 추가 ------------------------------------
 	
+	@Autowired
+	private JwtTokenManager jwtTokenManager;
+	
+	@Autowired
+	private AuthenticationConfiguration authenticationConfiguration;
+	
+	//정적자원들을 Security에서 제외
 	@Bean
-	WebSecurityCustomizer webSecurityCustomizer() {
-		//정적 리소스들을 시큐리티에서 제외
-		return web -> web
+	WebSecurityCustomizer customizer() {
+		
+		return web -> {
+			web
 				.ignoring()
 					.requestMatchers("/css/**")
-					.requestMatchers("/img/**")
-					.requestMatchers("/js/**")
-					.requestMatchers("/vendor/**")
-					.requestMatchers("/files/**");
+					.requestMatchers("/images/**", "/img/**")
+					.requestMatchers("/js/**", "/vendor/**")
+					;
+		};
+		
+	} 
+	
+	//인증과 인가에 관한 설정
+	@Bean
+	SecurityFilterChain securityFilterChain(HttpSecurity security) throws Exception {
+		
+		security
+			.cors((cors)->{cors.disable();})
+			.csrf((csrf)->{csrf.disable();})
+			
+			//인가(권한)에 관한 설정
+			.authorizeHttpRequests((auth)->{
+				auth
+					.requestMatchers("/notice/add", "/notice/update", "/notice/delete").hasRole("ADMIN")
+					.requestMatchers("/product/add", "/product/update", "/product/delete").hasAnyRole("MANAGER", "ADMIN")
+					.requestMatchers("/product/**").authenticated()
+					.requestMatchers("/user/mypage", "/user/update", "/user/logout").authenticated()
+					.anyRequest().permitAll()
+					;
+			})
+			
+			//Login form과 그외 관련 설정
+			.formLogin((form)->{
+				//front 분리
+				form.disable();
+						
+			})
+			
+			.logout((logout)->{
+				logout
+					.logoutUrl("/users/logout")
+					//.logoutSuccessUrl("/")
+					.addLogoutHandler(this.logout)
+					//.logoutSuccessHandler(logoutSucess)
+					.invalidateHttpSession(true)
+					.deleteCookies("JSESSIONID")
+					.deleteCookies("remember-me")
+					.deleteCookies("access-token", "refresh-token")
+					;
+			})
+			
+			.sessionManagement(session ->{
+				session
+					.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+						;
+			})
+			
+			.httpBasic((h)->{
+				h.disable();
+			})
+			
+			// 수정된 코드
+			.addFilterBefore(new JwtLoginFilter(jwtTokenManager, authenticationConfiguration.getAuthenticationManager()), BasicAuthenticationFilter.class)
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenManager, authenticationConfiguration.getAuthenticationManager()), JwtLoginFilter.class)
+			
+			// 기존 코드
+			//.addFilterAt(new JwtLoginFilter(jwtTokenManager, authenticationConfiguration.getAuthenticationManager()), UsernamePasswordAuthenticationFilter.class)
+			//.addFilterBefore(new JwtAuthenticationFilter(jwtTokenManager, authenticationConfiguration.getAuthenticationManager()), BasicAuthenticationFilter.class)
+			
+			.oauth2Login(t -> {
+				t.userInfoEndpoint((s)->{
+					s.userService(detailSerivceImpl);
+				});
+			})
+			
+			
+			;
+	
+		return security.build();
 	}
 	
-	// 인증과 인가에 관한 설정
-	 @Bean
-	SecurityFilterChain securityFilterChain(HttpSecurity http, OAuth2UserServiceImpl oAuth2UserServiceImpl)throws Exception{
-		http
-			.cors((cors)->{cors.disable();})
-			.csrf(csrf -> csrf.disable())
-			
-			// 인가(권한)에 관한 설정
-			.authorizeHttpRequests(authz -> authz
-					            .requestMatchers("/notice/add","/notice/update", "/notice/delete").hasRole("ADMIN")
-					            .requestMatchers("/product/add", "/product/update", "/product/delets").hasAnyRole("MANAGER", "ADMIN")
-					            .requestMatchers("/product/**").authenticated()
-					            .requestMatchers("/css/**", "/js/**", "/vendor/**", "/img/**", "/files/**").permitAll()
-					            .requestMatchers("/notice/list", "/notice/detail", "/qna/list", "/qna/detail").permitAll()
-					            .requestMatchers("/users/login", "/users/register").permitAll()
-					            .requestMatchers("/", "/WEB-INF/views/**").permitAll()
-					            .anyRequest().authenticated()		        )
-									
-			
-			// Login form과 그외 관련 설정
-			.formLogin(formLogin -> formLogin
-					// 로그인 폼 jsp 경로로 가는 url과 로그인 처리 url 작성
-		            .loginPage("/users/login")
-		            // .usernameParameter("id") // 만약 파라미터 이름이 다를경우 지정 가능
-		            // .passwordParameter("pw") // pw 파라미터 이름 지정
-		            .loginProcessingUrl("/users/login")
-		            //.defaultSuccessUrl("/", true)
-		            .successHandler(loginSuccessHandler)
-		            .failureHandler(loginFailHandler)
-		            // .failureUrl() // 로그인 실패시 url 지정
-		    )
-			.logout(logout -> logout
-		            .logoutUrl("/users/logout")
-		            // .logoutSuccessUrl("/")
-		            .addLogoutHandler(this.logout)
-		            .logoutSuccessHandler(logoutSucess)
-		            .invalidateHttpSession(true)
-		            .deleteCookies("JSESSIONID")
-		            .deleteCookies("remember-me")
-		            // .deleteCookies("JSESSIONID") ID 세션 지우기  이름은 다를수 있음 - 개발자 도구에서 확인
-		            
-		     )
-			.rememberMe(remember-> remember
-					.rememberMeParameter("rememberme")
-					.tokenValiditySeconds(432000)
-					.key("remeberkey")
-					.userDetailsService(detailServiceImpl)
-					.authenticationSuccessHandler(loginSuccessHandler)
-					.useSecureCookie(false)
-					
-			)
-			.sessionManagement(session -> session
-			        .invalidSessionUrl("/")
-			        .sessionFixation().migrateSession()  // 세션 보안 기본값
-			        .maximumSessions(1)
-			        .maxSessionsPreventsLogin(false)     // 새 로그인 차단
-			        .expiredUrl("/")
-			)
-			.oauth2Login(t -> t
-				.userInfoEndpoint(s->
-				s.userService(oAuth2UserServiceImpl) // 올바른 서비스로 교체
-				
-				)
-					
-			)
-			;
-
-
-			return http.build();
-	}
 	
 	@Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher(); // 세션 이벤트를 Spring Security에 알리는 리스너 등록
-    }
-	
-	 @Bean
-	 public static PasswordEncoder passwordEncoder() {
-		 return new BCryptPasswordEncoder();
-	 }
+	PasswordEncoder getPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
 }

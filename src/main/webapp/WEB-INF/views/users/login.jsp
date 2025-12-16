@@ -45,6 +45,15 @@
   								</div>
                                 <button type="submit" class="btn btn-primary">Login</button>
                             </form>
+                            
+                            <!-- ===== [START] 카카오 로그인 버튼 추가 ===== -->
+                            <div class="mt-3">
+                                <a href="/oauth2/authorization/kakao" class="btn btn-warning btn-block">
+                                    <i class="fas fa-comment"></i> Kakao Login
+                                </a>
+                            </div>
+                            <!-- ===== [END] 카카오 로그인 버튼 추가 ===== -->
+                            
                         </div>
                     </div>
                 </div>
